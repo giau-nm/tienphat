@@ -1,0 +1,40 @@
+2017-10-24T14:10:10+00:00 CRITICAL Maximum execution time of 30 seconds exceeded
+
+2017-10-27T20:07:04+00:00 CRITICAL Maximum execution time of 30 seconds exceeded
+
+2017-10-27T20:47:28+00:00 CRITICAL Maximum execution time of 30 seconds exceeded
+
+2017-10-27T20:55:32+00:00 CRITICAL Maximum execution time of 30 seconds exceeded
+
+2017-10-27T21:53:11+00:00 CRITICAL Maximum execution time of 30 seconds exceeded
+
+2017-10-27T23:44:16+00:00 CRITICAL Uncaught Error: Call to a member function get_price_html() on null in D:\xampp\htdocs\shopmypham\wp-content\themes\banhang\woocommerce\archive-product.php:129
+Stack trace:
+#0 D:\xampp\htdocs\shopmypham\wp-content\plugins\woocommerce\includes\wc-core-functions.php(209): include()
+#1 D:\xampp\htdocs\shopmypham\wp-content\themes\banhang\woocommerce\taxonomy-product_cat.php(22): wc_get_template('archive-product...')
+#2 D:\xampp\htdocs\shopmypham\wp-includes\template-loader.php(74): include('D:\\xampp\\htdocs...')
+#3 D:\xampp\htdocs\shopmypham\wp-blog-header.php(19): require_once('D:\\xampp\\htdocs...')
+#4 D:\xampp\htdocs\shopmypham\index.php(17): require('D:\\xampp\\htdocs...')
+#5 {main}
+  thrown
+
+2017-10-27T23:44:28+00:00 CRITICAL Uncaught Error: Call to a member function get_price_html() on null in D:\xampp\htdocs\shopmypham\wp-content\themes\banhang\woocommerce\archive-product.php:129
+Stack trace:
+#0 D:\xampp\htdocs\shopmypham\wp-content\plugins\woocommerce\includes\wc-core-functions.php(209): include()
+#1 D:\xampp\htdocs\shopmypham\wp-content\themes\banhang\woocommerce\taxonomy-product_cat.php(22): wc_get_template('archive-product...')
+#2 D:\xampp\htdocs\shopmypham\wp-includes\template-loader.php(74): include('D:\\xampp\\htdocs...')
+#3 D:\xampp\htdocs\shopmypham\wp-blog-header.php(19): require_once('D:\\xampp\\htdocs...')
+#4 D:\xampp\htdocs\shopmypham\index.php(17): require('D:\\xampp\\htdocs...')
+#5 {main}
+  thrown
+
+2017-10-27T23:44:50+00:00 CRITICAL Uncaught Error: Call to a member function get_price_html() on null in D:\xampp\htdocs\shopmypham\wp-content\themes\banhang\woocommerce\archive-product.php:129
+Stack trace:
+#0 D:\xampp\htdocs\shopmypham\wp-content\plugins\woocommerce\includes\wc-core-functions.php(209): include()
+#1 D:\xampp\htdocs\shopmypham\wp-content\themes\banhang\woocommerce\taxonomy-product_cat.php(22): wc_get_template('archive-product...')
+#2 D:\xampp\htdocs\shopmypham\wp-includes\template-loader.php(74): include('D:\\xampp\\htdocs...')
+#3 D:\xampp\htdocs\shopmypham\wp-blog-header.php(19): require_once('D:\\xampp\\htdocs...')
+#4 D:\xampp\htdocs\shopmypham\index.php(17): require('D:\\xampp\\htdocs...')
+#5 {main}
+  thrown
+
