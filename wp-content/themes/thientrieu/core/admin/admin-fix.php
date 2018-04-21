@@ -73,11 +73,11 @@
 	    <p><strong>THÔNG TIN WEBSITE</strong></p>
 	    <P><?php echo bloginfo( 'name' ); ?></p>
 	    <p><strong>NHÀ PHÁT TRIỂN</strong></p>
-	    <p>Hệ thống được phát triển bởi <a href="http://huykira.net/"><strong>HuyKira.Net</strong></a></p>
+	    <p>Hệ thống được phát triển bởi <strong>Manh Giau</strong></p>
 	    <p>Mọi yêu cầu, hỗ trợ quý khách hàng có thể liên hệ <strong>PHP Developers</strong></p>
-	    <p><strong>Điện thoại</strong>: 01658 949 68x</p> 
-	    <p><strong>Email</strong>: huykira@gmail.com - <strong>Website</strong>: <a href="http://huykira.net/"><strong>HuyKira.Net</strong></a></p> 
-	    <p><strong>Cảm ơn quý khách đã tin tưởng và sử dụng sản phẩm của Huy Kira.</strong></p>
+	    <p><strong>Điện thoại</strong>: 01674314498</p>
+	    <p><strong>Email</strong>: giaunm.56@gmail.com</p>
+	    <p><strong>Cảm ơn quý khách đã tin tưởng và sử dụng sản phẩm của Manh Giau.</strong></p>
 	<?php }
 
     add_filter('admin_title', 'my_admin_title', 10, 2);
