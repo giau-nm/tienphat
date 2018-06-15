@@ -7,10 +7,10 @@
 
 /*
 Plugin Name: Menu Image
-Plugin URI: http://html-and-cms.com/plugins/menu-image/
+Plugin URI: https://makeyoulivebetter.org.ua/menu-image/
 Description: Provide uploading images to menu item
 Author: Alex Davyskiba aka Zviryatko
-Version: 2.7.0
+Version: 2.9.1
 Author URI: http://makeyoulivebetter.org.ua/
 */
 
@@ -73,7 +73,8 @@ class Menu_Image_Plugin {
 		add_action( 'save_post_nav_menu_item', array( $this, 'menu_image_save_post_action' ), 10, 3 );
 		add_action( 'admin_head-nav-menus.php', array( $this, 'menu_image_admin_head_nav_menus_action' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'menu_image_wp_setup_nav_menu_item' ) );
-		add_filter( 'walker_nav_menu_start_el', array( $this, 'menu_image_nav_menu_item_filter' ), 10, 4 );
+		add_filter( 'nav_menu_link_attributes', array( $this, 'menu_image_nav_menu_link_attributes_filter' ), 10, 4 );
+		add_filter( 'nav_menu_item_title', array( $this, 'menu_image_nav_menu_item_title_filter' ), 10, 4 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'menu_image_add_inline_style_action' ) );
 		add_action( 'admin_action_delete-menu-item-image', array( $this, 'menu_image_delete_menu_item_image_action' ) );
 		add_action( 'wp_ajax_set-menu-item-thumbnail', array( $this, 'wp_ajax_set_menu_item_thumbnail' ) );
@@ -83,10 +84,7 @@ class Menu_Image_Plugin {
 		add_action( 'wp_update_nav_menu_item', array( $this, 'wp_update_nav_menu_item_action' ), 10, 2 );
 		add_action( 'admin_init', array( $this, 'admin_init' ), 99 );
 		add_filter( 'jetpack_photon_override_image_downsize', array( $this, 'jetpack_photon_override_image_downsize_filter' ), 10, 2 );
-		// Add support of Flatsome theme dropdown menu.
-		add_filter( 'menu_image_link_attributes', array($this, 'flatsome_dropdown_fix_menu_image_link_attributes_filter'), 10, 4 );
-
-		add_filter( 'walker_nav_menu_start_lvl', function() { return 'ngu'; }, 0 );
+		add_filter( 'wp_get_attachment_image_attributes', array($this, 'wp_get_attachment_image_attributes'), 99, 3 );
 	}
 
 	/**
@@ -126,13 +124,13 @@ class Menu_Image_Plugin {
 	public function menu_image_init() {
 		add_post_type_support( 'nav_menu_item', array( 'thumbnail' ) );
 
-		//$this->image_sizes = apply_filters( 'menu_image_default_sizes', $this->image_sizes );
-//		if (is_array($this->image_sizes)) {
-//			foreach ($this->image_sizes as $name => $params) {
-//				add_image_size($name, $params[0], $params[1], $params[2]);
-//			}
-//		}
-		//load_plugin_textdomain( 'menu-image', false, basename( dirname( __FILE__ ) ) . '/languages' );
+		$this->image_sizes = apply_filters( 'menu_image_default_sizes', $this->image_sizes );
+		if (is_array($this->image_sizes)) {
+			foreach ($this->image_sizes as $name => $params) {
+				add_image_size($name, $params[0], $params[1], ( array_key_exists(2, $params) ? $params[2] : false ) );
+			}
+		}
+		load_plugin_textdomain( 'menu-image', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
@@ -262,43 +260,87 @@ class Menu_Image_Plugin {
 	}
 
 	/**
+	 * Filters the HTML attributes applied to a menu item's anchor element.
+	 *
+     * @param array $atts {
+	 *     The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+	 *
+	 *     @type string $title  Title attribute.
+	 *     @type string $target Target attribute.
+	 *     @type string $rel    The rel attribute.
+	 *     @type string $href   The href attribute.
+	 * }
+	 * @param WP_Post  $item  The current menu item.
+	 * @param stdClass $args  An object of wp_nav_menu() arguments.
+	 * @param int      $depth Depth of menu item. Used for padding.
+	 *
+	 * @return array Link attributes.
+	 */
+	public function menu_image_nav_menu_link_attributes_filter( $atts, $item, $args, $depth = null ) {
+		$position = $item->title_position ? $item->title_position : apply_filters( 'menu_image_default_title_position', 'after' );
+		$class    = ! empty( $atts[ 'class' ] ) ? $atts[ 'class' ] : '';
+		$class    .= " menu-image-title-{$position}";
+		if ( $item->thumbnail_hover_id ) {
+			$class .= ' menu-image-hovered';
+		} elseif ( $item->thumbnail_id ) {
+			$class .= ' menu-image-not-hovered';
+		}
+		// Fix dropdown menu for Flatsome theme.
+		if ( ! empty( $args->walker ) && class_exists( 'FlatsomeNavDropdown' ) && $args->walker instanceof FlatsomeNavDropdown && ! is_null( $depth ) && $depth === 0 ) {
+			$class .= ' nav-top-link';
+		}
+		$atts[ 'class' ] = trim( $class );
+
+		return $atts;
+	}
+
+	/**
 	 * Replacement default menu item output.
 	 *
-	 * @param string $item_output Default item output
-	 * @param object $item        Menu item data object.
-	 * @param int    $depth       Depth of menu item. Used for padding.
+	 * @param string $title Default item output
+	 * @param object $item  Menu item data object.
+	 * @param int    $depth Depth of menu item. Used for padding.
 	 * @param object $args
 	 *
 	 * @return string
 	 */
-	public function menu_image_nav_menu_item_filter( $item_output, $item, $depth, $args ) {
-		//var_dump( $item );
-		$attributes = !empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) . '"' : '';
-		$attributes .= !empty( $item->target ) ? ' target="' . esc_attr( $item->target ) . '"' : '';
-		$attributes .= !empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) . '"' : '';
-		$attributes .= !empty( $item->url ) ? ' href="' . esc_attr( $item->url ) . '"' : '';
-		$attributes_array = shortcode_parse_atts($attributes);
-		$image_size = 'full';
+	public function menu_image_nav_menu_item_title_filter( $title, $item, $depth, $args ) {
+		$image_size = $item->image_size ? $item->image_size : apply_filters( 'menu_image_default_size', 'menu-36x36' );
+		$position   = $item->title_position ? $item->title_position : apply_filters( 'menu_image_default_title_position', 'after' );
+		$class      = "menu-image-title-{$position}";
 		$this->setUsedAttachments( $image_size, $item->thumbnail_id );
-
 		$image = '';
-		if ( $item->thumbnail_id ) {
-			$image .= '<div class="menu-image">' . wp_get_attachment_image( $item->thumbnail_id, $image_size, false ) . '</div>';
+		if ( $item->thumbnail_hover_id ) {
+			$this->setUsedAttachments( $image_size, $item->thumbnail_hover_id );
+			$hover_image_src = wp_get_attachment_image_src( $item->thumbnail_hover_id, $image_size );
+			$margin_size     = $hover_image_src[ 1 ];
+			$image           = "<span class='menu-image-hover-wrapper'>";
+			$image .= wp_get_attachment_image( $item->thumbnail_id, $image_size, false, "class=menu-image {$class}" );
+			$image .= wp_get_attachment_image(
+				$item->thumbnail_hover_id, $image_size, false, array(
+					'class' => "hovered-image {$class}",
+					'style' => "margin-left: -{$margin_size}px;",
+				)
+			);
+			$image .= '</span>';;
+		} elseif ( $item->thumbnail_id ) {
+			$image = wp_get_attachment_image( $item->thumbnail_id, $image_size, false, "class=menu-image {$class}" );
 		}
-
-		$attributes_array = apply_filters( 'menu_image_link_attributes', $attributes_array, $item, $depth, $args );
-		$attributes = '';
-		foreach ( $attributes_array as $attr_name => $attr_value ) {
-			$attributes .= "{$attr_name}=\"$attr_value\" ";
+		$none = ''; // Sugar.
+		switch ( $position ) {
+			case 'hide':
+			case 'before':
+			case 'above':
+				$item_args = array( $none, $title, $image );
+				break;
+			case 'after':
+			default:
+				$item_args = array( $image, $title, $none );
+				break;
 		}
-		$attributes = trim($attributes);
+		$title = vsprintf( '%s<span class="menu-image-title">%s</span>%s', $item_args );
 
-		$item_output = "{$args->before}<a {$attributes}>";
-		$link        = $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-
-		$item_output .= $link . "</a>{$args->after}" . $image;
-
-		return $item_output;
+		return $title;
 	}
 
 	/**
@@ -307,8 +349,8 @@ class Menu_Image_Plugin {
 	 * Loading custom stylesheet to fix images positioning in match themes
 	 */
 	public function menu_image_add_inline_style_action() {
-		//wp_register_style( 'menu-image', plugins_url( '', __FILE__ ) . '/menu-image.css', array(), '1.1', 'all' );
-		//wp_enqueue_style( 'menu-image' );
+		wp_register_style( 'menu-image', plugins_url( '', __FILE__ ) . '/menu-image.css', array(), '1.1', 'all' );
+		wp_enqueue_style( 'menu-image' );
 	}
 
 	/**
@@ -370,20 +412,20 @@ class Menu_Image_Plugin {
 			$thumbnail_id ? esc_attr__( 'Change menu item image', 'menu-image' ) : esc_attr__( 'Set menu item image', 'menu-image' ),
 			'',
 			$item_id,
-			$thumbnail_id ? wp_get_attachment_image( $thumbnail_id, 'thumbnail' ) : esc_html__( 'Set image', 'menu-image' ),
+			$thumbnail_id ? wp_get_attachment_image( $thumbnail_id, $default_size ) : esc_html__( 'Set image', 'menu-image' ),
 			$thumbnail_id ? '<a href="#" class="remove-post-thumbnail">' . __( 'Remove', 'menu-image' ) . '</a>' : ''
 		);
 
 		$hover_id = get_post_meta( $item_id, '_thumbnail_hover_id', true );
-//		$content .= sprintf(
-//			$markup,
-//			esc_html__( 'Image on hover', 'menu-image' ),
-//			$hover_id ? esc_attr__( 'Change menu item image on hover', 'menu-image' ) : esc_attr__( 'Set menu item image on hover', 'menu-image' ),
-//			' hover-image',
-//			$item_id,
-//			$hover_id ? wp_get_attachment_image( $hover_id, 'thumbnail' ) : esc_html__( 'Set image on hover', 'menu-image' ),
-//			$hover_id ? '<a href="#" class="remove-post-thumbnail hover-image">' . __( 'Remove', 'menu-image' ) . '</a>' : ''
-//		);
+		$content .= sprintf(
+			$markup,
+			esc_html__( 'Image on hover', 'menu-image' ),
+			$hover_id ? esc_attr__( 'Change menu item image on hover', 'menu-image' ) : esc_attr__( 'Set menu item image on hover', 'menu-image' ),
+			' hover-image',
+			$item_id,
+			$hover_id ? wp_get_attachment_image( $hover_id, $default_size ) : esc_html__( 'Set image on hover', 'menu-image' ),
+			$hover_id ? '<a href="#" class="remove-post-thumbnail hover-image">' . __( 'Remove', 'menu-image' ) . '</a>' : ''
+		);
 
 		return $content;
 	}
@@ -411,6 +453,49 @@ class Menu_Image_Plugin {
 		}
 
 		ob_start(); ?>
+
+		<div class="menu-item-image-options">
+			<p class="description description-wide">
+				<label for="edit-menu-item-image-size-<?php echo $item_id; ?>"><?php _e( 'Image size', 'menu-image' ); ?>
+					<br />
+					<select id="edit-menu-item-image-size-<?php echo $item_id; ?>"
+							class="widefat edit-menu-item-image-size"
+							name="menu_item_image_size[<?php echo $item_id; ?>]">
+						<option value='full' <?php echo $image_size == 'full' ? ' selected="selected"' : '' ?>><?php _e( 'Original Size', 'menu-image' ) ?></option>
+						<?php foreach ( get_intermediate_image_sizes() as $size ) :
+							printf(
+								"<option value='%s'%s>%s</option>\n",
+								esc_attr( $size ),
+								$image_size == $size ? ' selected="selected"' : '',
+								ucfirst( $size )
+							); ?>
+						<?php endforeach; ?>
+					</select>
+				</label>
+			</p>
+			<p class="description description-wide">
+				<label><?php _e( 'Title position', 'menu-image' ); ?></label><br />
+				<?php
+				$positions = array(
+					'hide'   => __( 'Hide', 'menu-image' ),
+					'above'  => __( 'Above', 'menu-image' ),
+					'below'  => __( 'Below', 'menu-image' ),
+					'before' => __( 'Before', 'menu-image' ),
+					'after'  => __( 'After', 'menu-image' ),
+				);
+				foreach ( $positions as $position => $label ) :
+					printf(
+						"<label><input type='radio' name='menu_item_image_title_position[%s]' value='%s'%s/> %s</label>%s",
+						$item_id,
+						esc_attr( $position ),
+						$title_position == $position ? ' checked="checked"' : '',
+						$label,
+						$position != 'after' ? ' | ' : ''
+					);
+				endforeach; ?>
+
+			</p>
+		</div>
 
 		<?php
 		$content = "<div class='menu-item-images' style='min-height:70px'>$content</div>" . ob_get_clean();
@@ -497,7 +582,7 @@ class Menu_Image_Plugin {
 	 * @return bool
 	 */
 	public function jetpack_photon_override_image_downsize_filter( $prevent, $data ) {
-		return $this->isAttachmentUsed( $data[ 'size' ], $data[ 'attachment_id' ] );
+		return $this->isAttachmentUsed( $data[ 'attachment_id' ], $data[ 'size' ] );
 	}
 
 	/**
@@ -513,32 +598,42 @@ class Menu_Image_Plugin {
 	/**
 	 * Check if attachment is used in menu items.
 	 *
-	 * @param string $size
 	 * @param int    $id
+	 * @param string $size
 	 *
 	 * @return bool
 	 */
-	public function isAttachmentUsed( $size, $id ) {
-		return is_string($size) && isset( $this->used_attachments[ $size ] ) && in_array( $id, $this->used_attachments[ $size ] );
+	public function isAttachmentUsed( $id, $size = null ) {
+		if ( ! is_null( $size ) ) {
+			return is_string( $size ) && isset( $this->used_attachments[ $size ] ) && in_array( $id, $this->used_attachments[ $size ] );
+		} else {
+			foreach ( $this->used_attachments as $used_attachment ) {
+				if ( in_array( $id, $used_attachment ) ) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	/**
-	 * Fix dropdown menu for Flatsome theme.
+	 * Filters the list of attachment image attributes.
 	 *
-	 * @param array  $attributes An array of attributes.
-	 * @param object $item      Menu item data object.
-	 * @param int    $depth     Depth of menu item. Used for padding.
-	 * @param object $args
+	 * @since 2.8.0
 	 *
-	 * @return array
+	 * @param array        $attr       Attributes for the image markup.
+	 * @param WP_Post      $attachment Image attachment post.
+	 * @param string|array $size       Requested size. Image size or array of width and height values
+	 *                                 (in that order). Default 'thumbnail'.
+     *
+     * @return array Valid array of image attributes.
 	 */
-	public function flatsome_dropdown_fix_menu_image_link_attributes_filter( $attributes, $item, $depth, $args ) {
-		if (!empty($args->walker) && class_exists('FlatsomeNavDropdown') && $args->walker instanceof FlatsomeNavDropdown && $depth === 0) {
-			$class = !empty($attributes['class']) ? $attributes['class'] : '';
-			$class .= ' nav-top-link';
-			$attributes['class'] = $class;
+	public function wp_get_attachment_image_attributes( $attr, $attachment, $size ) {
+		if ( $this->isAttachmentUsed( $attachment->ID, $size ) ) {
+			unset( $attr['sizes'], $attr['srcset'] );
 		}
-		return $attributes;
+
+		return $attr;
 	}
 }
 
@@ -563,7 +658,7 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 			'_wpnonce',
 		);
 
-		$original_title = '';
+		$original_title = false;
 		if ( 'taxonomy' == $item->type ) {
 			$original_title = get_term_field( 'name', $item->object_id, $item->object, 'raw' );
 			if ( is_wp_error( $original_title ) )
@@ -571,6 +666,11 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 		} elseif ( 'post_type' == $item->type ) {
 			$original_object = get_post( $item->object_id );
 			$original_title = get_the_title( $original_object->ID );
+		} elseif ( 'post_type_archive' == $item->type ) {
+			$original_object = get_post_type_object( $item->object );
+			if ( $original_object ) {
+				$original_title = $original_object->labels->archives;
+			}
 		}
 
 		$classes = array(
@@ -599,8 +699,8 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 
 		?>
 		<li id="menu-item-<?php echo $item_id; ?>" class="<?php echo implode(' ', $classes ); ?>">
-			<dl class="menu-item-bar">
-				<dt class="menu-item-handle">
+			<div class="menu-item-bar">
+				<div class="menu-item-handle">
 					<span class="item-title"><span class="menu-item-title"><?php echo esc_html( $title ); ?></span> <span class="is-submenu" <?php echo $submenu_text; ?>><?php _e( 'sub item' ); ?></span></span>
 					<span class="item-controls">
 						<span class="item-type"><?php echo esc_html( $item->type_label ); ?></span>
@@ -616,7 +716,7 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 									),
 									'move-menu_item'
 								);
-							?>" class="item-move-up"><abbr title="<?php esc_attr_e('Move up'); ?>">&#8593;</abbr></a>
+							?>" class="item-move-up" aria-label="<?php esc_attr_e( 'Move up' ) ?>">&#8593;</a>
 							|
 							<a href="<?php
 								echo wp_nonce_url(
@@ -629,17 +729,17 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 									),
 									'move-menu_item'
 								);
-							?>" class="item-move-down"><abbr title="<?php esc_attr_e('Move down'); ?>">&#8595;</abbr></a>
+							?>" class="item-move-down" aria-label="<?php esc_attr_e( 'Move down' ) ?>">&#8595;</a>
 						</span>
-						<a class="item-edit" id="edit-<?php echo $item_id; ?>" title="<?php esc_attr_e('Edit Menu Item'); ?>" href="<?php
+						<a class="item-edit" id="edit-<?php echo $item_id; ?>" href="<?php
 							echo ( isset( $_GET['edit-menu-item'] ) && $item_id == $_GET['edit-menu-item'] ) ? admin_url( 'nav-menus.php' ) : add_query_arg( 'edit-menu-item', $item_id, remove_query_arg( $removed_args, admin_url( 'nav-menus.php#menu-item-settings-' . $item_id ) ) );
-						?>"><?php _e( 'Edit Menu Item' ); ?></a>
+						?>" aria-label="<?php esc_attr_e( 'Edit menu item' ); ?>"><span class="screen-reader-text"><?php _e( 'Edit' ); ?></span></a>
 					</span>
-				</dt>
-			</dl>
+				</div>
+			</div>
 
 			<div class="menu-item-settings wp-clearfix" id="menu-item-settings-<?php echo $item_id; ?>">
-				<?php if( 'custom' == $item->type ) : ?>
+				<?php if ( 'custom' == $item->type ) : ?>
 					<p class="field-url description description-wide">
 						<label for="edit-menu-item-url-<?php echo $item_id; ?>">
 							<?php _e( 'URL' ); ?><br />
@@ -647,13 +747,13 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 						</label>
 					</p>
 				<?php endif; ?>
-				<p class="description description-thin">
+				<p class="description description-wide">
 					<label for="edit-menu-item-title-<?php echo $item_id; ?>">
 						<?php _e( 'Navigation Label' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $item_id; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $item_id; ?>]" value="<?php echo esc_attr( $item->title ); ?>" />
 					</label>
 				</p>
-				<p class="description description-thin">
+				<p class="field-title-attribute field-attr-title description description-wide">
 					<label for="edit-menu-item-attr-title-<?php echo $item_id; ?>">
 						<?php _e( 'Title Attribute' ); ?><br />
 						<input type="text" id="edit-menu-item-attr-title-<?php echo $item_id; ?>" class="widefat edit-menu-item-attr-title" name="menu-item-attr-title[<?php echo $item_id; ?>]" value="<?php echo esc_attr( $item->post_excerpt ); ?>" />
@@ -662,7 +762,7 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 				<p class="field-link-target description">
 					<label for="edit-menu-item-target-<?php echo $item_id; ?>">
 						<input type="checkbox" id="edit-menu-item-target-<?php echo $item_id; ?>" value="_blank" name="menu-item-target[<?php echo $item_id; ?>]"<?php checked( $item->target, '_blank' ); ?> />
-						<?php _e( 'Open link in a new window/tab' ); ?>
+						<?php _e( 'Open link in a new tab' ); ?>
 					</label>
 				</p>
 				<p class="field-css-classes description description-thin">
@@ -692,19 +792,17 @@ class Menu_Image_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 					</label>
 				</p>
 
-				<p class="field-move hide-if-no-js description description-wide">
-					<label>
-						<span><?php _e( 'Move' ); ?></span>
-						<a href="#" class="menus-move menus-move-up" data-dir="up"><?php _e( 'Up one' ); ?></a>
-						<a href="#" class="menus-move menus-move-down" data-dir="down"><?php _e( 'Down one' ); ?></a>
-						<a href="#" class="menus-move menus-move-left" data-dir="left"></a>
-						<a href="#" class="menus-move menus-move-right" data-dir="right"></a>
-						<a href="#" class="menus-move menus-move-top" data-dir="top"><?php _e( 'To the top' ); ?></a>
-					</label>
-				</p>
+				<fieldset class="field-move hide-if-no-js description description-wide">
+					<span class="field-move-visual-label" aria-hidden="true"><?php _e( 'Move' ); ?></span>
+					<button type="button" class="button-link menus-move menus-move-up" data-dir="up"><?php _e( 'Up one' ); ?></button>
+					<button type="button" class="button-link menus-move menus-move-down" data-dir="down"><?php _e( 'Down one' ); ?></button>
+					<button type="button" class="button-link menus-move menus-move-left" data-dir="left"></button>
+					<button type="button" class="button-link menus-move menus-move-right" data-dir="right"></button>
+					<button type="button" class="button-link menus-move menus-move-top" data-dir="top"><?php _e( 'To the top' ); ?></button>
+				</fieldset>
 
 				<div class="menu-item-actions description-wide submitbox">
-					<?php if( 'custom' != $item->type && $original_title !== false ) : ?>
+					<?php if ( 'custom' != $item->type && $original_title !== false ) : ?>
 						<p class="link-to-original">
 							<?php printf( __('Original: %s'), '<a href="' . esc_attr( $item->url ) . '">' . esc_html( $original_title ) . '</a>' ); ?>
 						</p>

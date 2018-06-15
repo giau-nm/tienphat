@@ -8,6 +8,7 @@ jQuery(document).ready(function(){
 		ppsPopups = typeof(ppsPopups) === 'undefined' ? [] : ppsPopups;
 		ppsPopups = ppsPopups.concat( ppsPopupsFromFooter );
 	}
+	jQuery(document).trigger('ppsBeforePopupsStartInit', ppsPopups);
 	if(typeof(ppsPopups) !== 'undefined' && ppsPopups && ppsPopups.length) {
 		ppsInitBgOverlay();
 		jQuery(document).trigger('ppsBeforePopupsInit', ppsPopups);
@@ -519,7 +520,12 @@ function _ppsPopupAddStat( popup, action, smType, isUnique ) {
 	});
 	jQuery(document).trigger('ppsAfterPopupsStatAdded', {popup: popup, action: action, smType: smType, is_unique: isUnique});
 }
-
+function ppsShowPopUpOnClick( popup, element ) {
+	if(isNumericPps( popup ))
+		popup = ppsGetPopupById( popup );
+	_ppsSaveClickHref(popup, jQuery(element));
+	ppsShowPopup( popup );
+}
 /**
  * Show popup
  * @param {mixed} popup Popup object or it's ID
@@ -937,7 +943,9 @@ function ppsClosePopup(popup) {
 		enableScrollPps('body');
 	}
 	// Check redirect after close option
-	if(popup.params.tpl.reidrect_on_close && popup.params.tpl.reidrect_on_close != '') {
+	if(parseInt(popup.params.tpl.close_redirect_to_btn_url) && popup.params.close_redirect_to_btn_url_href) {
+		toeRedirect(popup.params.close_redirect_to_btn_url_href, parseInt(popup.params.tpl.reidrect_on_close_new_wnd));
+	} else if(popup.params.tpl.reidrect_on_close && popup.params.tpl.reidrect_on_close != '') {
 		toeRedirect(popup.params.tpl.reidrect_on_close, parseInt(popup.params.tpl.reidrect_on_close_new_wnd));
 	}
 	_ppsPopupAddStat( popup, 'close' );	// Save close popup statistics
@@ -1291,15 +1299,28 @@ function _ppsBindClickHrefSaving() {
 	for(var i = 0; i < ppsPopups.length; i++) {
 		if(ppsPopups[ i ].params
 			&& ppsPopups[ i ].params.tpl
-			&& parseInt(ppsPopups[ i ].params.tpl.sub_redirect_to_btn_url)
+			&& (parseInt(ppsPopups[ i ].params.tpl.sub_redirect_to_btn_url) || parseInt(ppsPopups[ i ].params.tpl.close_redirect_to_btn_url))
 		) {
-			var $btn = jQuery('[onclick*="ppsShowPopup('+ ppsPopups[ i ].id+ ')"]')
-			,	href = $btn && $btn.size() ? $btn.attr('href') : false;
-			if(href && href != '') {
-				ppsPopups[ i ].params.sub_redirect_to_btn_url_href = href;
-			}
+			var $btn = jQuery('[onclick*="ppsShowPopup('+ ppsPopups[ i ].id+ ')"]');
+			ppsPopups[ i ] = _ppsSaveClickHref(ppsPopups[ i ], $btn);
 		}
 	}
+}
+function _ppsSaveClickHref(popup, $element) {
+	if(popup.params
+		&& popup.params.tpl
+		&& $element
+		&& $element.length
+	) {
+		var href = $element.attr('href');
+		if(parseInt(popup.params.tpl.sub_redirect_to_btn_url)) {
+			popup.params.sub_redirect_to_btn_url_href = href;
+		}
+		if(parseInt(popup.params.tpl.close_redirect_to_btn_url)) {
+			popup.params.close_redirect_to_btn_url_href = href;
+		}
+	}
+	return popup;
 }
 function ppsAddShowClb( id, clb ) {
 	if(!g_ppsShowCallbacks[ id ]) {

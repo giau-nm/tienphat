@@ -65,7 +65,7 @@
 		<br />
 		<?php _e('Or, if you know HTML basics, - you can insert "onclick" attribute to any of your element from code below', PPS_LANG_CODE)?>:<br />
 		<?php echo htmlPps::text('ppsCopyTextCode', array(
-				'value' => esc_html('onclick="ppsShowPopup('. $this->popup['id'] .'); return false;"'),
+				'value' => esc_html('onclick="ppsShowPopUpOnClick('. $this->popup['id'] .', this); return false;"'),
 				'attrs' => 'data-parent-selector=".ppsPopupMainOptSect" class="ppsCopyTextCode"'));?><br />
 		<?php _e('Or you can even use it for your Menu item, just add code', PPS_LANG_CODE)?>:<br />
 		<?php echo htmlPps::text('ppsCopyTextCode', array(
@@ -254,7 +254,25 @@
 		<span class="supsystic-tooltip-right" title="<?php echo esc_html(__('If enabled - this will show PopUp in admin area too - like on frontend.', PPS_LANG_CODE))?>">
 			<?php _e('Show in Admin Area', PPS_LANG_CODE)?>
 		</span>
-	</label>
+	</label><br />
+	<label class="ppsPopupMainOptLbl" data-name="Visit several Pages">
+		<?php echo htmlPps::radiobutton('params[main][show_on]', array(
+			'attrs' => 'class="ppsProOpt"',
+			'value' => 'visit_several_pages',
+			'checked' => htmlPps::checkedOpt($this->popup['params']['main'], 'show_on', 'visit_several_pages')))?>
+		<span class="supsystic-tooltip-right" title="<?php echo esc_html(__('PopUp will appear after your site visitor will visit required pages number on your site.', PPS_LANG_CODE))?>">
+			<?php _e('Visit several Pages', PPS_LANG_CODE)?>
+		</span>
+		<?php if(!$this->isPro) {?>
+			<span class="ppsProOptMiniLabel"><a target="_blank" href="<?php echo framePps::_()->getModule('supsystic_promo')->generateMainLink('utm_source=plugin&utm_medium=visit_several_pages&utm_campaign=popup');?>"><?php _e('PRO option', PPS_LANG_CODE)?></a></span>
+		<?php }?>
+	</label><br />
+	<div id="ppsOptDesc_params_main_show_on_visit_several_pages" style="display: none;" class="ppsOptDescParamsShell supsystic-tooltip-right" title="<?php _e('Enter here number of pages that need to be visited by user before PopUp will be shown.', PPS_LANG_CODE)?>">
+		<?php _e('Pages number to visit', PPS_LANG_CODE)?>:<br />
+		<?php echo htmlPps::text('params[main][visit_page_cnt]', array(
+			'value' => $this->popup['params']['main']['visit_page_cnt'],
+			'attrs' => 'class=""'));?>
+	</div><br />
 </section>
 <section class="ppsPopupMainOptSect">
 	<span class="ppsOptLabel"><?php _e('When to close PopUp', PPS_LANG_CODE)?></span>

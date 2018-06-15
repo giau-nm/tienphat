@@ -133,6 +133,7 @@ class popupPps extends modulePps {
 				if(is_object($post) && isset($post->post_content)) {
 					if((preg_match_all('/\[\s*'. PPS_SHORTCODE_CLICK. '.+id\s*\=.*(?P<POPUP_ID>\d+)\]/iUs', $post->post_content, $matches) 
 						|| preg_match_all('/ppsShowPopup\s*\(\s*(?P<POPUP_ID>\d+)\s*\)\s*;*/iUs', $post->post_content, $matches)
+						|| preg_match_all('/ppsShowPopUpOnClick\s*\(\s*(?P<POPUP_ID>\d+)\s*\,\s*this/iUs', $post->post_content, $matches)
 						|| preg_match_all('/\"\#ppsShowPopUp_(?P<POPUP_ID>\d+)\"/iUs', $post->post_content, $matches)
 						|| preg_match_all('/ppsCheckShowPopup\s*\(\s*(?P<POPUP_ID>\d+)\s*\)\s*;*/iUs', $post->post_content, $matches)
 						) && isset($matches['POPUP_ID'])

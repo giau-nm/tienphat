@@ -478,7 +478,6 @@
 					<?php echo htmlPps::checkbox('params[tpl][sub_redirect_to_btn_url]', array(
 						'checked' => htmlPps::checkedOpt($this->popup['params']['tpl'], 'sub_redirect_to_btn_url')))?>
 					<?php _e('Redirect to button URL', PPS_LANG_CODE)?>
-					
 				</label>
 			</td>
 		</tr>

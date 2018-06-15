@@ -342,9 +342,10 @@ class utilsPps {
             foreach ($blog_id as $id) {
                 if (switch_to_blog($id)) {
                     installerPps::init();
+					restore_current_blog();
                 } 
             }
-			restore_current_blog();
+			// restore_current_blog();
 			// switch_to_blog($orig_id);
             return;
         } else {
@@ -365,9 +366,10 @@ class utilsPps {
             foreach ($blog_id as $id) {
                 if (switch_to_blog($id)) {
                     installerPps::delete();
+					restore_current_blog();
                 } 
             }
-			restore_current_blog();
+			// restore_current_blog();
 			// switch_to_blog($orig_id);
             return;
         } else {
@@ -382,9 +384,10 @@ class utilsPps {
             foreach ($blog_id as $id) {
                 if (switch_to_blog($id)) {
                     installerPps::deactivate();
+					restore_current_blog();
                 } 
             }
-			restore_current_blog();
+			// restore_current_blog();
 			// switch_to_blog($orig_id);
             return;
         } else {
