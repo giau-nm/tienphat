@@ -7476,11 +7476,11 @@ li .comment-respond small {
 #header-contact>li>a { padding-bottom: 9px }
 
 .vi-header {
-    border-bottom: solid 1px #0056a8
+    border-bottom: solid 1px #0B3C11
 }
 .vi-left-title {
     width: auto;
-    background: #0056a8;
+    background: #0B3C11;
     color: #fff;
     padding: 3px 10px;
     font-size: 18px;
@@ -7491,8 +7491,8 @@ li .comment-respond small {
 .vi-left-title a:hover { color: #FFEBA4 }
 .vi-left-title:after {
     border: 18px solid transparent;
-    border-left-color: #0056a8;
-    border-bottom-color: #0056a8;
+    border-left-color: #0B3C11;
+    border-bottom-color: #0B3C11;
     position: absolute;
     top: 0;
     left: 100%;
@@ -7507,7 +7507,7 @@ li .comment-respond small {
     margin-left: 0
 }
 .vi-right-link a.vi-more, .vi-right-link a:hover {
-    color: #0056a8
+    color: #0B3C11
 }
 .vi-right-link a.vi-more:after {
     content: "\f101";
@@ -7527,7 +7527,7 @@ body.single-product .product h1.product-title { font-size: 24px }
     transition: border-color .5s
 }
 .deal-row .img:hover .img-inner {
-    border-color: #0056a8
+    border-color: #0B3C11
 }
 .deal-row .img:hover img {
     opacity: .9
@@ -7645,7 +7645,7 @@ body.single-product .product h1.product-title { font-size: 24px }
 .footer-socials a:last-child {
     margin-right: 0
 }
-.footer-1 .widget-title { color: #0056A8 }
+.footer-1 .widget-title { color: #0B3C11 }
 .footer-1 .widget:nth-child(-n+3) .widget-title {
     text-align: center;
 }
@@ -7700,7 +7700,7 @@ Bấm biểu tượng trợ giúp phía trên để tìm hiểu thêm.
     height: 100%
 }
 .product-small.col > div:hover {
-    border-color: #0056a8;
+    border-color: #0B3C11;
 }
 .box-text { padding-left: 7px; padding-right: 7px }
 .gallery-col .box-image {
@@ -7710,7 +7710,7 @@ Bấm biểu tượng trợ giúp phía trên để tìm hiểu thêm.
     margin-top: 10px; left: 0px; font-size: 14px;
 }
 .is-outline {
-    color: #0056a8
+    color: #0B3C11
 }
 .widget {
     margin-bottom: 50px
@@ -7724,7 +7724,7 @@ Bấm biểu tượng trợ giúp phía trên để tìm hiểu thêm.
     margin-bottom: 40px;
 }
 .widget_product_categories h3.widget-title {
-    background: #0056a8;
+    background: #0B3C11;
     color: #fff;
     padding: 12px 12px;
     margin-bottom: 0px;

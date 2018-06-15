@@ -483,7 +483,7 @@ function wc_price( $price, $args = array() ) {
         if ($price == '1') {
             $formatted_price = "Giá LH 0968.568.733";
         }
-	$return          = '<span class="woocommerce-Price-amount amount">' . $formatted_price . '</span>';
+	$return          = '<span class="woocommerce-Price-amount amount" style="color: red">' . $formatted_price . '</span>';
 
 	if ( $ex_tax_label && wc_tax_enabled() ) {
 		$return .= ' <small class="woocommerce-Price-taxLabel tax_label">' . WC()->countries->ex_tax_or_vat() . '</small>';

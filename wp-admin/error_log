@@ -1,0 +1,9 @@
+[09-Jun-2018 16:27:54 UTC] WordPress database error Table 'u468139870_nhat.wp_pps_popup' doesn't exist for query UPDATE wp_pps_popup SET css = REPLACE(css, "#ppsPopupShell_[ID] .ppsSubscribeShell input[type=text],#ppsPopupShell_[ID] .ppsSubscribeShell input[name=\"email\"]", "#ppsPopupShell_[ID] .ppsSubscribeShell input[type=text][name=\"email\"]") made by activate_plugin, include_once('/plugins/popup-by-supsystic/pps.php'), installerPps::update, installerPps::init, installerPps::makeTextFieldsCssUpdate, dbPps::query
+[09-Jun-2018 16:27:54 UTC] WordPress database error Table 'u468139870_nhat.wp_pps_popup' doesn't exist for query UPDATE wp_pps_popup SET css = REPLACE(css, "#ppsPopupShell_[ID] .ppsSubscribeShell input[type=text],#ppsPopupShell_[ID] .ppsSubscribeShell input[name=\"email\"]", "#ppsPopupShell_[ID] .ppsSubscribeShell input[type=text][name=\"email\"]") made by activate_plugin, include_once('/plugins/popup-by-supsystic/pps.php'), installerPps::update, installerPps::init, installerPps::makeTextFieldsCssUpdateRound2, dbPps::query
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 76 ] : Using token: 3cc36628768f1f84d4c6980d09ced036
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 173 ] : Using consumer: curl -> ConsumerStrategies_CurlConsumer
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 18 ] : Instantiated new Consumer
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 76 ] : Using token: 3cc36628768f1f84d4c6980d09ced036
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 173 ] : Using consumer: curl -> ConsumerStrategies_CurlConsumer
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 18 ] : Instantiated new Consumer
+[09-Jun-2018 16:28:02 UTC] [ Base_MixpanelBase - line 194 ] : Queued message: {"event":"Welcome Show","properties":{"mp_lib":"php","token":"3cc36628768f1f84d4c6980d09ced036","time":1528561682}}
