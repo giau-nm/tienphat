@@ -10,7 +10,6 @@ Flatsome_Option::add_section( 'header_cart', array(
 	//'description' => __( 'This is the section description', 'flatsome-admin' ),
 ) );
 
-
 Flatsome_Option::add_field( 'option',  array(
 	'type'        => 'select',
 	'settings'     => 'header_cart_style',
@@ -100,7 +99,7 @@ function flatsome_refresh_header_cart_partials( WP_Customize_Manager $wp_customi
 	if ( ! isset( $wp_customize->selective_refresh ) ) {
 	      return;
 	}
-	
+
 	// Cart
 	$wp_customize->selective_refresh->add_partial( 'header-cart', array(
 	    'selector' => '.cart-item',

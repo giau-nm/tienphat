@@ -50,7 +50,7 @@ require get_template_directory() . '/inc/helpers/helpers-icons.php';
  * Structure.
  * Template functions used throughout the theme.
  */
-if(!is_admin()){
+//if(!is_admin()){
   require get_template_directory() . '/inc/structure/structure-footer.php';
   require get_template_directory() . '/inc/structure/structure-header.php';
   require get_template_directory() . '/inc/structure/structure-pages.php';
@@ -60,7 +60,7 @@ if(!is_admin()){
   if(is_portfolio_activated()){
       require get_template_directory() . '/inc/structure/structure-portfolio.php';
   }
-}
+//}
 
 if(is_admin()){
   require get_template_directory() . '/inc/structure/structure-admin.php';
@@ -114,6 +114,7 @@ if(is_portfolio_activated()){
 
 if (is_woocommerce_activated()) {
   require get_template_directory() . '/inc/shortcodes/ux_products.php';
+  require get_template_directory() . '/inc/shortcodes/ux_products_list.php';
   require get_template_directory() . '/inc/shortcodes/product_flip.php';
   require get_template_directory() . '/inc/shortcodes/product_categories.php';
 }
@@ -137,13 +138,16 @@ if ( is_woocommerce_activated() ) {
   require get_template_directory() . '/inc/woocommerce/structure-wc-category-page-header.php';
   require get_template_directory() . '/inc/woocommerce/structure-wc-product-box.php';
   require get_template_directory() . '/inc/woocommerce/structure-wc-helpers.php';
-  require get_template_directory() . '/inc/woocommerce/structure-wc-custom.php';
-  require get_template_directory() . '/inc/woocommerce/structure-wc-headers.php';
   require get_template_directory() . '/inc/woocommerce/structure-wc-checkout.php';
   require get_template_directory() . '/inc/woocommerce/structure-wc-cart.php';
   require get_template_directory() . '/inc/woocommerce/structure-wc-product-page.php';
   require get_template_directory() . '/inc/woocommerce/structure-wc-product-page-header.php';
   if(get_theme_mod('catalog_mode')) require get_template_directory() . '/inc/woocommerce/structure-wc-catalog-mode.php';
+
+  // Add structured data fallback for older WooCommerce versions.
+  if(!class_exists('WC_Structured_Data') && flatsome_is_request('frontend')) {
+    require get_template_directory() . '/inc/classes/class-woocommerce-structured-data.php';
+  }
 }
 
 
@@ -156,7 +160,7 @@ if (is_woocommerce_activated() ) { require get_template_directory() . '/inc/widg
 
 
 /**
- * Custom Theme Post Types (TODO: Make as plugins)
+ * Custom Theme Post Types
  */
 require get_template_directory() . '/inc/post-types/post-type-ux-blocks.php';
 

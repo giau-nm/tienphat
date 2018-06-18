@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Add custom page to render UX Builder on.
+ */
+add_action( 'admin_menu', function () {
+  add_submenu_page(
+    null,
+    'UX Builder',
+    'UX Builder',
+    'edit_posts',
+    'uxbuilder',
+    'ux_builder_edit_page_callback'
+  );
+} );
+
+function ux_builder_edit_page_callback () {
+  echo 'uxbuilder';
+}
+
+/**
  * Register breakpoints.
  */
 function ux_builder_register_breakpoints() {
@@ -119,10 +137,10 @@ add_filter( 'page_row_actions', 'ux_builder_page_row_actions', 10, 2 );
  * Search only page title when searching for posts.
  *
  * @param  string $search
- * @param  object &$wp_query
+ * @param  object $wp_query
  * @return string
  */
-function ux_builder_post_search( $search, &$wp_query ) {
+function ux_builder_post_search( $search, $wp_query ) {
     global $wpdb;
 
     if( empty( $search ) ) return $search;

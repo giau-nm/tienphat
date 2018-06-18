@@ -13,7 +13,7 @@
 				$current_lang = $lang['name'];
 			}
 		}
-	} 
+	}
 	// WPML
 	else if(function_exists('icl_get_languages')){
 		$languages = icl_get_languages();
@@ -44,10 +44,10 @@
 			} else if($languages && function_exists('icl_get_languages')){
 				foreach ($languages as $lang) {
 				$current = '';
-				echo '<li><a href="' . $lang['url'] . '" hreflang="' . $lang['language_code'] . '"><i class="icon-image"><img src="'.$lang['country_flag_url'].'"/></i> ' . $lang['native_name'] . '</a></li>';	
+				echo '<li><a href="' . $lang['url'] . '" hreflang="' . $lang['language_code'] . '"><i class="icon-image"><img src="'.$lang['country_flag_url'].'"/></i> ' . $lang['native_name'] . '</a></li>';
 				}
-			}	
-			
+			}
+
 		?>
 		<?php if(!function_exists('pll_the_languages') && !function_exists('icl_get_languages')) echo '<li><a>You need Polylang or WPML plugin for this to work. You can remove it from Theme Options.</a></li>'; ?>
 	</ul>

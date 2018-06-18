@@ -2,10 +2,10 @@
 
 function flatsome_get_google_fonts_link_lazy(){
 
-    $type_nav = get_theme_mod('type_nav', array('font-family'=> 'Roboto','variant' => '400', 'subsets' => 'Vietnamese'));
-    $type_texts = get_theme_mod('type_texts', array('font-family'=> 'Roboto','variant' => '400', 'subsets' => 'Vietnamese'));
-    $type_headings = get_theme_mod('type_headings',array('font-family'=> 'Roboto','variant' => '700', 'subsets' => 'Vietnamese'));
-    $type_alt = get_theme_mod('type_alt', array('font-family'=> 'Roboto', 'variant' => '400', 'subsets' => 'Vietnamese'));
+    $type_nav = get_theme_mod('type_nav', array('font-family'=> 'Lato','variant' => '700'));
+    $type_texts = get_theme_mod('type_texts', array('font-family'=> 'Lato','variant' => '400'));
+    $type_headings = get_theme_mod('type_headings',array('font-family'=> 'Lato','variant' => '700'));
+    $type_alt = get_theme_mod('type_alt', array('font-family'=> 'Dancing Script'));
 
     // Fix old
     if(!is_array($type_nav)) {
@@ -20,8 +20,6 @@ function flatsome_get_google_fonts_link_lazy(){
     if(!is_array($type_headings)) {
       $type_headings = array('font-family' => $type_headings, 'variant' => 'default');
     }
-
-    $type_texts['variant'] .= ',bold,italic';
 
     $fonts = array($type_headings, $type_texts, $type_nav, $type_alt);
 

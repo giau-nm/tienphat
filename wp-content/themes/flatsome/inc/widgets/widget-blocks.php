@@ -18,7 +18,7 @@ class Flatsome_UX_Blocks_Widget extends WP_Widget {
 
 		$control_ops = array('id_base' => 'block_widget' );
 
-		parent::__construct( 'block_widget', __('VIFONIC Blocks', 'flatsome'), $widget_ops, $control_ops );
+		parent::__construct( 'block_widget', __('Flatsome Blocks', 'flatsome'), $widget_ops, $control_ops );
 	}
 
 	function widget($args, $instance) {
@@ -43,11 +43,11 @@ class Flatsome_UX_Blocks_Widget extends WP_Widget {
 		<?php echo $before_widget; ?>
 
 		<?php if (!empty($instance['title']) ) echo $before_title . $instance['title'] . $after_title; ?>
-
+		
 		<?php if(!empty($instance['block'])) echo do_shortcode('[block id="'.$instance['block'].'"]'); ?>
 
 		<?php echo $after_widget; ?>
-
+		
 		<?php
 		$cache[$args['widget_id']] = ob_get_flush();
 		wp_cache_set('block_widget', $cache, 'widget');

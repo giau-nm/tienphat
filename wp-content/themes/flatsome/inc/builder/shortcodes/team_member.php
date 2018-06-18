@@ -30,8 +30,9 @@ add_ux_builder_shortcode( 'team_member', array(
                     'default' => 'normal',
                     'options' => require( __DIR__ . '/values/box-layouts.php' )
                 ),
-                'name' => array( 'type' => 'textfield','heading' => 'Name', 'default' => ''),
-                'title' => array( 'type' => 'textfield','heading' => 'Title', 'default' => ''),
+
+                'name' => array( 'type' => 'textfield','heading' => 'Name', 'default' => '', 'on_change' => array( 'selector' => '.person-name', 'content' => '{{ value }}')),
+                'title' => array( 'type' => 'textfield','heading' => 'Title', 'default' => '',  'on_change' => array( 'selector' => '.person-title', 'content' => '{{ value }}')),
                 'link' => array( 'type' => 'textfield','heading' => 'Link', 'default' => ''),
                 'depth' => array(
                     'type' => 'slider',
@@ -63,12 +64,10 @@ add_ux_builder_shortcode( 'team_member', array(
                         'small' => array( 'title' => 'Small' ),
                     ),
                 ),
-                //-------------
-                'hnc_tel' => array( 'type' => 'textfield','heading' => 'Tel', 'default' => ''),
                 'facebook' => array( 'type' => 'textfield','heading' => 'Facebook', 'default' => ''),
-                'hnc_skype' => array( 'type' => 'textfield','heading' => 'Skype', 'default' => ''),
-                //---------------
+                'instagram' => array( 'type' => 'textfield','heading' => 'Instagram', 'default' => ''),
                 'twitter' => array( 'type' => 'textfield','heading' => 'Twitter', 'default' => ''),
+                'googleplus' => array( 'type' => 'textfield','heading' => 'Google+', 'default' => ''),
                 'youtube' => array( 'type' => 'textfield','heading' => 'Youtube', 'default' => ''),
                 'email' => array( 'type' => 'textfield','heading' => 'Email', 'default' => ''),
                 'pinterest' => array( 'type' => 'textfield','heading' => 'Pinterest', 'default' => ''),

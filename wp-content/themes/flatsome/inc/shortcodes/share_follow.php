@@ -22,7 +22,7 @@ function flatsome_share($atts, $content = null) {
 	$featured_image =  wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'large');
 	$featured_image_2 = $featured_image['0'];
 	$post_title = rawurlencode(get_the_title($post->ID));
-	$whatsapp_text = rawurlencode($post_title.' - '.$permalink);
+	$whatsapp_text = $post_title.' - '.$permalink;
 
 	if($title) $title = '<span class="share-icons-title">'.$title.'</span>';
 
@@ -80,6 +80,7 @@ function flatsome_share($atts, $content = null) {
     <?php
 	$content = ob_get_contents();
 	ob_end_clean();
+	$content = flatsome_sanitize_whitespace_chars( $content);
 	return $content;
 }
 add_shortcode('share','flatsome_share');
@@ -107,10 +108,7 @@ function flatsome_follow($atts, $content = null) {
 		'vkontakte' => '',
 		'px500' => '',
 		'snapchat' => '',
-        //--------------
-        'hnc_skype' => '',
-        'hnc_tel' => '',
-        //--------------
+
 		// Depricated
 		'size' => '',
 
@@ -134,10 +132,6 @@ function flatsome_follow($atts, $content = null) {
 		$flickr = get_theme_mod('follow_flickr');
 		$email = get_theme_mod('follow_email');
 		$rss = get_theme_mod('follow_rss');
-        //-----------
-        $hnc_skype = get_theme_mod('follow_hnc_skype');
-        $hnc_tel = get_theme_mod('follow_hnc_tel');
-        //-----------
 	}
 
 	$style = get_flatsome_icon_class($style);
@@ -153,20 +147,10 @@ function flatsome_follow($atts, $content = null) {
     	<?php if($title){?>
     	<span><?php echo $title; ?></span>
 		<?php }?>
-    	<!-- ================= -->
-        <?php if($hnc_tel){?>
-               <a href="tel:0<?php echo $hnc_tel; ?>" target="_blank" data-label="Tel" rel="nofollow" class="<?php echo $style; ?> phone tooltip" title="<?php _e('Call me!','flatsome') ?>"><?php echo get_flatsome_icon('icon-phone'); ?>
-               </a>
-        <?php }?>
-        <?php if($facebook){?>
-        <a href="<?php echo $facebook; ?>" target="_blank" data-label="Facebook"  rel="nofollow" class="<?php echo $style; ?> facebook tooltip" title="<?php _e('Follow on Facebook','flatsome') ?>"><?php echo get_flatsome_icon('icon-facebook'); ?>
-        </a>
-        <?php }?>
-        <?php if($hnc_skype){?>
-               <a href="skype:<?php echo $hnc_skype; ?>?chat" target="_blank" data-label="Skype" rel="nofollow" class="<?php echo $style; ?> skype tooltip" title="<?php _e('Follow on Skype','flatsome') ?>"><?php echo get_flatsome_icon('icon-skype'); ?>
-               </a>
-        <?php }?>
-        <!-- ===================== -->
+    	<?php if($facebook){?>
+    	<a href="<?php echo $facebook; ?>" target="_blank" data-label="Facebook"  rel="nofollow" class="<?php echo $style; ?> facebook tooltip" title="<?php _e('Follow on Facebook','flatsome') ?>"><?php echo get_flatsome_icon('icon-facebook'); ?>
+    	</a>
+		<?php }?>
 		<?php if($instagram){?>
 		    <a href="<?php echo $instagram; ?>" target="_blank" rel="nofollow" data-label="Instagram" class="<?php echo $style; ?>  instagram tooltip" title="<?php _e('Follow on Instagram','flatsome')?>"><?php echo get_flatsome_icon('icon-instagram'); ?>
 		   </a>
@@ -224,6 +208,7 @@ function flatsome_follow($atts, $content = null) {
 	<?php
 	$content = ob_get_contents();
 	ob_end_clean();
+	$content = flatsome_sanitize_whitespace_chars( $content);
 	return $content;
 }
 add_shortcode("follow", "flatsome_follow");

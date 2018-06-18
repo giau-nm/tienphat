@@ -51,7 +51,7 @@
 
 	<div class="inner-panel" style="text-align: center;">
 	<img style="width:100px; margin:30px 15px 0;" src="<?php echo get_template_directory_uri().'/inc/admin/panel/img/emailsupport.png'; ?>"/>			<h3>Premium E-mail Support</h3>
-		<p>All customers of BIZHOSTVN has access to premium e-mail support.</p>
+		<p>All customers of Flatsome has access to premium e-mail support.</p>
 		<?php if(!flatsome_is_theme_enabled())	{ ?>
 			<a href="<?php echo admin_url().'admin.php?page=flatsome-panel';?>" class="button button-primary">Activate Theme to get support</a>
     	<?php } else if(flatsome_is_support_expired(basename( get_template_directory() ))){ ?>
@@ -60,10 +60,10 @@
 		<?php } else {
 			global $current_user;
 			?>
-		<a href="mailto:flatsome@uxthemes.com?subject=Need help with BIZHOSTVN &body=Enter Your Message here...%0D%0A%0D%0A Best regards,%0D%0A <?php echo $current_user->user_firstname.' '; echo $current_user->user_lastname; ?> %0D%0A %0D%0A%0D%0A[Keep this] Theme license: <?php echo sanitize_text_field( get_option( basename( get_template_directory() ) . '_wup_purchase_code', '' ) );?> [Required for support]" class="button button-primary">
+		<a href="mailto:support@uxthemes.com?subject=Need help with Flatsome &body=Enter Your Message here...%0D%0A%0D%0A Best regards,%0D%0A <?php echo $current_user->user_firstname.' '; echo $current_user->user_lastname; ?> %0D%0A %0D%0A%0D%0A[Keep this] Theme license: <?php echo sanitize_text_field( get_option( basename( get_template_directory() ) . '_wup_purchase_code', '' ) );?> [Required for support]" class="button button-primary">
 			<?php _e( 'Send us a Support Ticket', 'flatsome-admin' ); ?>
 		</a>
-		<br><br><small><a href="https://themeforest.net/page/item_support_policy">What does support include?</a></small>
+		<br><br><small><a href="https://themeforest.net/page/item_support_policy" target="_blank">What does support include?</a></small>
 		<?php } ?>
 	</div>
 
@@ -72,18 +72,26 @@
 	<div class="cols">
 
 		<div class="inner-panel" style="text-align: center;">
-			<h3>BIZHOSTVN Theme Users</h3>
-			<p>Join our community and get help from other BIZHOSTVN Users.</p>
+			<h3>Flatsome Community</h3>
+			<p>Join our community and get help from other Flatsome Users.</p>
 		    <a href="//www.facebook.com/groups/flatsome/" class="button button-primary">
 	        <?php _e( 'Join Community', 'flatsome-admin' ); ?></a>
 		</div>
 
 		<div class="inner-panel" style="text-align: center;">
 			<h3>Beta Testing Group</h3>
-			<p>Test new versions of BIZHOSTVN before everyone else</p>
+			<p>Test new versions of Flatsome before everyone else</p>
 		    <a href="//www.facebook.com/groups/flatsomebeta/" class="button button-primary">
 	        <?php _e( 'Join Beta Group', 'flatsome-admin' ); ?></a>
 		</div>
+
+
+    <div class="inner-panel" style="text-align: center;">
+      <h3>Feature Requests</h3>
+      <p>Send Feature Request for Flatsome Theme and vote for the ones you like.</p>
+      <a href="//uxthemes.canny.io/flatsome" class="button button-primary">
+      <?php _e( 'Feature Requests', 'flatsome-admin' ); ?></a>
+    </div>
 
 	</div>
 

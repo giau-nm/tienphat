@@ -94,7 +94,10 @@ function ux_col($atts, $content = null) {
     'depth' => '',
     'depth_hover' => '',
     'text_depth' => ''
-  	), $atts ) );
+  ), $atts ) );
+
+  // Hide if visibility is hidden
+  if($visibility == 'disabled') return;
 
   $classes[] = 'col';
   $classes_inner[] = 'col-inner';
@@ -107,7 +110,7 @@ function ux_col($atts, $content = null) {
   if($class) $classes[] = $class;
 
   if($visibility) $classes[] = $visibility;
-  
+
 
   if($span__md) $classes[] = 'medium-'.$span__md;
   if($span__sm) $classes[] = 'small-'.$span__sm;
@@ -130,7 +133,7 @@ function ux_col($atts, $content = null) {
 
   // Add Depth Class
   if($depth) $classes_inner[] = 'box-shadow-'.$depth;
-  if($depth_hover) $classes_inner[] = 'box-shadow-'.$depth.'-hover';
+  if($depth_hover) $classes_inner[] = 'box-shadow-'.$depth_hover.'-hover';
   if($text_depth) $classes_inner[] = 'text-shadow-'.$text_depth;
 
   // Add Color class

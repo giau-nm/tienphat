@@ -37,6 +37,7 @@ function ux_section($atts, $content = null) {
     'scroll_for_more' => '',
     // Border Control
     'border' => '',
+    'border_hover' => '',
     'border_color' => '',
     'border_margin' => '',
     'border_radius' => '',
@@ -44,6 +45,9 @@ function ux_section($atts, $content = null) {
     ), $atts );
 
     extract( $atts );
+
+    // Hide if visibility is hidden
+    if($visibility == 'hidden') return;
 
     ob_start();
 
@@ -88,6 +92,8 @@ function ux_section($atts, $content = null) {
     $classes_bg[] = get_theme_mod('lazy_load_backgrounds', 1) ? '' : 'bg-loaded';
     $classes_bg[] = $bg ? '' : 'bg-loaded';
 
+    if($border_hover) $classes[] = 'has-hover';
+
     $classes =  implode(" ", $classes);
     $classes_bg =  implode(" ", $classes_bg);
   ?>
@@ -101,9 +107,9 @@ function ux_section($atts, $content = null) {
         <?php if($loading) echo '<div class="loading-spin centered"></div>'; ?>
 
         <?php if($scroll_for_more) echo '<button class="scroll-for-more z-5 icon absolute bottom h-center">'.get_flatsome_icon('icon-angle-down','42px').'</button>'; ?>
-        
+
         <?php if($effect) echo '<div class="effect-'.$effect.' bg-effect fill no-click"></div>'; ?>
-        
+
         <?php require( __DIR__ . '/commons/border.php' ) ;?>
 
       </div><!-- .section-bg -->

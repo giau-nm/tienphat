@@ -41,7 +41,7 @@ return array(
         'type' => 'textfield',
         'heading' => 'Total Posts',
         'conditions' => 'ids === ""',
-        'default' => '12',
+        'default' => '8',
     ),
 
     'offset' => array(

@@ -48,6 +48,13 @@ Flatsome_Option::add_field( 'option',  array(
 	),
 ));
 
+Flatsome_Option::add_field( 'option',  array(
+  'type'        => 'checkbox',
+  'settings'     => 'portfolio_title_transparent',
+  'label'       => __( 'Transparent Header', 'flatsome-admin' ),
+  'section'     => 'fl-portfolio',
+  'default' => 0
+));
 
 Flatsome_Option::add_field( 'option',  array(
 	'type'        => 'radio-image',
@@ -79,13 +86,6 @@ Flatsome_Option::add_field( 'option',  array(
   'default' => 1
 ));
 
-Flatsome_Option::add_field( 'option',  array(
-	'type'        => 'checkbox',
-	'settings'     => 'portfolio_title_transparent',
-	'label'       => __( 'Transparent Header', 'flatsome-admin' ),
-	'section'     => 'fl-portfolio',
-	'default' => 0
-));
 
 
 Flatsome_Option::add_field( '', array(

@@ -4,7 +4,7 @@
 function flatsome_add_fallbacks () {
 
   $ie_css = get_template_directory_uri() .'/assets/css/ie-fallback.css';
-  
+
   echo '<!--[if IE]>';
   echo '<link rel="stylesheet" type="text/css" href="'.$ie_css.'">';
   echo '<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>';
@@ -13,4 +13,4 @@ function flatsome_add_fallbacks () {
   echo '<script src="'.get_template_directory_uri() .'/assets/libs/ie-flexibility.js"></script>';
   echo '<![endif]-->';
 }
-add_action('wp_head', 'flatsome_add_fallbacks'); 
+add_action('wp_head', 'flatsome_add_fallbacks');

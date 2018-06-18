@@ -13,9 +13,7 @@
 			do_action( 'woocommerce_before_main_content' );
 		?>
 
-		<div class="clearfix" style="margin-bottom: 30px">
-			<?php do_action( 'woocommerce_archive_description' ); ?>
-		</div>
+		<?php do_action( 'woocommerce_archive_description' ); ?>
 
 		<?php if ( have_posts() ) : ?>
 
@@ -25,44 +23,13 @@
 
 			<?php woocommerce_product_loop_start(); ?>
 
-			<?php
-			$product_categories = get_categories(array(
-				'parent'       => get_queried_object_id(),
-				'menu_order'   => 'ASC',
-				'hide_empty'   => 0,
-				'hierarchical' => 1,
-				'taxonomy'     => 'product_cat',
-				'pad_counts'   => 1,
-			));
-			if (empty($product_categories)) {
-				while ( have_posts() ) : the_post();
-					wc_get_template_part( 'content', 'product' );
-				endwhile; // end of the loop.
-			}
-			else {
-				foreach ( $product_categories as $category ): ?>
-					<div class="product-archive-header">
-						<div class="clearfix vi-header">
-							<h3 class="vi-left-title pull-left"><a href="<?php echo get_category_link( $category ) ?>"><?php echo $category->name ?></a></h3>
-							<div class="vi-right-link pull-right">
-								<a class="vi-more" href="<?php echo get_category_link( $category ) ?>">Xem tất cả</a>
-							</div>
-						</div>
-					</div>
-					<?php
-					query_posts( array(
-						'post_type' => 'product',
-						'posts_per_page' => -1,
-						'product_cat' => $category->slug,
-						'tax_query' => array( array( 'taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $category->slug, 'include_children' => false  ) )
-					) );
-					if (have_posts()) while ( have_posts() ) : the_post();
-						wc_get_template_part( 'content', 'product' );
-					endwhile; // end of the loop.
-					wp_reset_query();
-					endforeach;
-			}
-			?>
+				<?php woocommerce_product_subcategories(); ?>
+
+				<?php while ( have_posts() ) : the_post(); ?>
+
+					<?php wc_get_template_part( 'content', 'product' ); ?>
+
+				<?php endwhile; // end of the loop. ?>
 
 			<?php woocommerce_product_loop_end(); ?>
 

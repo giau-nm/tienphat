@@ -12,7 +12,7 @@ class Flatsome_Admin {
 
 		add_action( 'admin_menu', array( $this, 'flatsome_panel_register_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'flatsome_panel_style' ) );
-
+	
 	} // end constructor
 
 
@@ -34,20 +34,19 @@ class Flatsome_Admin {
 	public function flatsome_panel_register_menu() {
 		$url = admin_url().'admin.php?page=flatsome-panel';
 
-        // add_menu_page( 'Welcome to Flatsome', 'Flatsome', 'manage_options', 'flatsome-panel', array( $this, 'flatsome_panel_welcome' ), get_template_directory_uri().'/assets/img/logo-icon.svg', '2');
-		add_menu_page( 'Welcome to BIZHOSTVN', 'BIZHOSTVN', 'manage_options', 'flatsome-panel', array( $this, 'flatsome_panel_welcome_vifonic' ), get_template_directory_uri().'/assets/img/logo-icon.svg', '2');
-
-		// add_submenu_page('flatsome-panel', 'Theme License', 'Theme License', 'manage_options', 'admin.php?page=flatsome-panel' );
+		add_menu_page( 'Welcome to Flatsome', 'Flatsome', 'manage_options', 'flatsome-panel', array( $this, 'flatsome_panel_welcome' ), get_template_directory_uri().'/assets/img/logo-icon.svg', '2');
+		
+		add_submenu_page('flatsome-panel', 'Theme License', 'Theme License', 'manage_options', 'admin.php?page=flatsome-panel' );
 
 		//add_submenu_page('flatsome-panel', 'Getting Started', 'Getting Started', 'manage_options', 'flatsome-panel-getting-started', array( $this, 'flatsome_panel_getting_started') );
 
 		//add_submenu_page('flatsome-panel', 'Tutorials', 'Tutorials', 'manage_options', 'flatsome-panel-tutorials', array( $this, 'flatsome_panel_tutorials') );
 
-		// add_submenu_page('flatsome-panel', 'Help & Guides', 'Help & Guides', 'manage_options', 'flatsome-panel-support', array( $this, 'flatsome_panel_support') );
+		add_submenu_page('flatsome-panel', 'Help & Guides', 'Help & Guides', 'manage_options', 'flatsome-panel-support', array( $this, 'flatsome_panel_support') );
 
 		//add_submenu_page('flatsome-panel', 'Plugins', 'Plugins', 'manage_options', 'flatsome-panel-plugins', array( $this, 'flatsome_panel_plugins') );
 
-		// add_submenu_page('flatsome-panel', 'Change log', 'Change log', 'manage_options', 'flatsome-panel-changelog', array( $this, 'flatsome_panel_changelog') );
+		add_submenu_page('flatsome-panel', 'Change log', 'Change log', 'manage_options', 'flatsome-panel-changelog', array( $this, 'flatsome_panel_changelog') );
 
 	    add_submenu_page('flatsome-panel', '', 'Theme Options', 'manage_options', 'customize.php' );
 	}
@@ -121,18 +120,7 @@ class Flatsome_Admin {
 		</div>
 		<?php
 	}
-    //===============>
-    public function flatsome_panel_welcome_vifonic() {
-        ?>
-        <div class="flatsome-panel">
-            <div class="wrap about-wrap">
-                <?php require_once( get_template_directory() . '/inc/admin/panel/sections/top_vifonic.php' ); ?>
-            </div>
-        </div>
-        <?php
-    }
-    //<====================
-}
 
+}
 
 $GLOBALS['Flatsome_Admin'] = new Flatsome_Admin();

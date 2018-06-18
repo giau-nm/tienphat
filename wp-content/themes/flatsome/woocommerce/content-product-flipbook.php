@@ -27,15 +27,15 @@ add_action( 'woocommerce_single_product_flipbook_summary', 'woocommerce_template
                   </div>
                   <?php wc_get_template( 'loop/sale-flash.php' ); ?>
                 </div><!-- end product-image -->
-          </a>        
+          </a>
         </div><!-- end product -->
         </div><!-- large-6 -->
        <div class="large-6 col flip-page-two">
         <div class="product-info col-inner inner-padding">
-              <h1 itemprop="name" class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
+              <h1 class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
               <div class="is-divider medium"></div>
               <?php do_action( 'woocommerce_single_product_flipbook_summary' ); ?>
-              <a href="<?php the_permalink(); ?>" class="button"><?php _e( 'Read More', 'woocommerce' ); ?></a>
+              <a href="<?php the_permalink(); ?>" class="button"><?php _e( 'Read more', 'woocommerce' ); ?></a>
          </div>
         </div><!-- large-6 -->
 </div><!-- row -->

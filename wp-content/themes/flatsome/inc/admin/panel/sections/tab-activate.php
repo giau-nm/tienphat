@@ -35,7 +35,7 @@
         echo '<div class="notice-warning notice-alt"><p>' . esc_html__( 'Purchase code removed.' ) . '</p></div>';
       } else {
         //this means a valid purchase code is present and no errors were found
-       echo '<div class="notice-success notice-alt notice-large" style="margin-bottom:15px!important">' . __( 'Your <strong>purchase code is valid</strong>. Thank you! Enjoy BIZHOSTVN Theme and automatic updates.' ) . '</div>';
+       echo '<div class="notice-success notice-alt notice-large" style="margin-bottom:15px!important">' . __( 'Your <strong>purchase code is valid</strong>. Thank you! Enjoy Flatsome Theme and automatic updates.' ) . '</div>';
       }
     }
 
@@ -88,15 +88,15 @@
       <tr>
         <td>
           <?php if(flatsome_is_support_expired($slug)){ ?>
-            <strong>Support ends</strong>
-          <?php } else { ?>
             <strong>Support ended</strong>
+          <?php } else { ?>
+            <strong>Support ends</strong>
           <?php } ?>
         </td>
         <td><?php echo $support_ends; ?></td>
       </tr>
      <tr>
-        <td><strong>Support time</strong></td>
+        <td><strong>Support Status</strong></td>
         <td><?php echo $support_message; ?></td>
       </tr>
       <tr>

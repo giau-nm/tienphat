@@ -10,4 +10,3 @@
 	</div><!-- .entry-image -->
 	<?php } ?>
 </header><!-- post-header -->
-

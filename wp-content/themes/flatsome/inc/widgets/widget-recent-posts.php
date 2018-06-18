@@ -19,7 +19,7 @@ class Flatsome_Recent_Post_Widget extends WP_Widget {
 
 		$control_ops = array( 'width' => 300, 'height' => 350, 'id_base' => 'flatsome_recent_posts' );
 
-		parent::__construct( 'flatsome_recent_posts', __('VIFONIC Recent Posts', 'flatsome'), $widget_ops, $control_ops );
+		parent::__construct( 'flatsome_recent_posts', __('Flatsome Recent Posts', 'flatsome'), $widget_ops, $control_ops );
 	}
 
 	function widget($args, $instance) {

@@ -51,7 +51,6 @@ $nav_elements = array(
   'html-3' => __( 'HTML 3', 'flatsome-admin' ),
   'html-4' => __( 'HTML 4', 'flatsome-admin' ),
   'html-5' => __( 'HTML 5', 'flatsome-admin' ),
-  'mega-menu' => __( 'Mega Menu', 'flatsome-admin' ),
 );
 
 // Add Hooked Header Elements
@@ -81,7 +80,7 @@ $nav_styles_img = array(
 $smart_links = __( '', 'flatsome-admin' );
 
 $sizes = array(
-    'xxlarge' => __( 'X Large', 'flatsome-admin' ),
+    'xxlarge' => __( 'XX Large', 'flatsome-admin' ),
     'xlarge' => __( 'X Large', 'flatsome-admin' ),
     'larger' => __( 'Larger', 'flatsome-admin' ),
     'large' => __( 'Large', 'flatsome-admin' ),

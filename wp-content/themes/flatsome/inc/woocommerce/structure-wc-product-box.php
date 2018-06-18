@@ -24,7 +24,7 @@ function flatsome_woocommerce_get_alt_product_thumbnail() {
     if($hover_style !== 'fade_in_back' && $hover_style !== 'zoom_in') return;
 
     global $product;
-    $attachment_ids = $product->get_gallery_image_ids();
+    $attachment_ids = fl_woocommerce_version_check('3.0.0') ? $product->get_gallery_image_ids() : $product->get_gallery_attachment_ids();
     $class = 'show-on-hover absolute fill hide-for-small back-image';
     if($hover_style == 'zoom_in') $class .= $class.' hover-zoom';
 
@@ -57,11 +57,15 @@ function flatsome_woocommerce_shop_loop_category(){
   <p class="category uppercase is-smaller no-text-overflow product-cat op-7">
         <?php
         global $product;
-        $product_cats = strip_tags($product->get_categories(',', '', ''));
+        $product_cats = function_exists('wc_get_product_category_list') ? wc_get_product_category_list(get_the_ID(), ',', '', '') : $product->get_categories(',', '', '');
+
+        $product_cats = strip_tags($product_cats);
+
         if($product_cats){
              list($firstpart) = explode(',', $product_cats);
              echo $firstpart;
-        } ?>
+        }
+        ?>
    </p> <?php }
 add_action('woocommerce_shop_loop_item_title','flatsome_woocommerce_shop_loop_category', 0);
 
@@ -116,7 +120,7 @@ function flatsome_woocommerce_shop_loop_button(){
             esc_attr( $product->get_id() ),
             esc_attr( $product->is_type( 'variable' ) ? '' : 'ajax_add_to_cart'),
             $product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
-            esc_attr( $product->product_type ),
+            esc_attr( $product->get_type() ),
             esc_attr( 'primary' ), // Button color
             esc_attr( get_theme_mod('add_to_cart_style', 'outline') ), // Button style
             esc_attr( 'small' ), // Button size

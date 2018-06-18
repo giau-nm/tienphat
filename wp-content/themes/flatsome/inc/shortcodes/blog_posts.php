@@ -33,11 +33,11 @@ function shortcode_latest_from_blog($atts, $content = null, $tag) {
 		'ids' => false, // Custom IDs
 		'cat' => '',
 		'excerpt' => 'visible',
-		'excerpt_length' => 38,
+		'excerpt_length' => 47,
 		'offset' => '',
 
 		// Read more
-		'readmore' => 'Xem thêm',
+		'readmore' => '',
 		'readmore_color' => '',
 		'readmore_style' => 'outline',
 		'readmore_size' => 'small',
@@ -217,22 +217,26 @@ while ( $recentPosts->have_posts() ) : $recentPosts->the_post();
 		?>
 		<div class="col <?php echo implode(' ', $col_class); ?>" <?php echo $animate;?>>
 			<div class="col-inner">
-			<a href="<?php the_permalink() ?>" class="plain">
+		
 				<div class="box <?php echo $classes_box; ?> box-blog-post has-hover">
-					<div class="box-image" <?php echo get_shortcode_inline_css($css_args_img); ?>>
-						<div class="<?php echo $classes_image; ?>" <?php echo get_shortcode_inline_css($css_image_height); ?>>
-							<?php the_post_thumbnail($image_size); ?>
-							<?php if($image_overlay){ ?><div class="overlay" style="background-color: <?php echo $image_overlay;?>"></div><?php } ?>
-							<?php if($style == 'shade'){ ?><div class="shade"></div><?php } ?>
-						</div>
-						<?php if($post_icon && get_post_format()) { ?>
-							<div class="absolute no-click x50 y50 md-x50 md-y50 lg-x50 lg-y50">
-				            	<div class="overlay-icon">
-				                    <i class="icon-play"></i>
-				                </div>
-				            </div>
-						<?php } ?>
-					</div><!-- .box-image -->
+          <?php if(has_post_thumbnail()) { ?>
+  					
+<div class="box-image" 
+<?php echo get_shortcode_inline_css($css_args_img); ?>>
+  						<div class="<?php echo $classes_image; ?>" <?php echo get_shortcode_inline_css($css_image_height); ?>> 	
+  							<a href="<?php the_permalink() ?>" class="plain"> <?php the_post_thumbnail($image_size); ?>
+  							<?php if($image_overlay){ ?><div class="overlay" style="background-color: <?php echo $image_overlay;?>"></div><?php } ?>
+  							<?php if($style == 'shade'){ ?><div class="shade"></div><?php } ?></a>
+  						</div>
+  						<?php if($post_icon && get_post_format()) { ?>
+  							<div class="absolute no-click x50 y50 md-x50 md-y50 lg-x50 lg-y50">
+  				            	<div class="overlay-icon">
+  				                    <i class="icon-play"></i>
+  				                </div>
+  				            </div>
+  						<?php } ?>
+  					</div><!-- .box-image -->
+          <?php } ?>
 					<div class="box-text <?php echo $classes_text; ?>" <?php echo get_shortcode_inline_css($css_args); ?>>
 					<div class="box-text-inner blog-post-inner">
 
@@ -247,19 +251,31 @@ while ( $recentPosts->have_posts() ) : $recentPosts->the_post();
 					?>
 					</p>
 					<?php } ?>
-					<h5 class="post-title is-<?php echo $title_size; ?> <?php echo $title_style;?>"><?php the_title(); ?></h5>
-					<?php if((!has_post_thumbnail() && $show_date !== 'false') || $show_date == 'text') {?><div class="post-meta is-small op-8"><?php echo get_the_date(); ?></div><?php } ?>
+					<h5 class="post-title is-<?php echo $title_size; ?> <?php echo $title_style;?>"><a href="<?php the_permalink() ?>" class="plain"><?php the_title(); ?></a></h5>
+					<?php if((!has_post_thumbnail() && $show_date !== 'false') || $show_date == 'text') {?><div class="post-meta is-small op-8"></div><?php } ?>
+			
+			<div class="meta-post-danh-muc">
+<span class="fa fa-folder"></span> <span class="danh-muc"><?php printf( __('<span class="category"> %1$s ', 'flatsome'),
+				get_the_category_list( ',' ) );?></span> <span class="fa fa-user"></span><span class="tac-gia"> <a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ); ?>"><?php the_author(); ?></a></span> <span class="fa fa-clock-o"></span><?php	printf( __('<span class="date-published">  %1$s', 'flatsome'),
+				get_the_date() );?></div>
+
 					<div class="is-divider"></div>
 					<?php if($excerpt !== 'false') { ?>
 					<p class="from_the_blog_excerpt <?php if($excerpt !== 'visible'){ echo 'show-on-hover hover-'.$excerpt; } ?>"><?php
 					  $the_excerpt = get_the_excerpt();
-					  echo flatsome_string_limit_words($the_excerpt, $excerpt_length) . ' ...';
+					  echo flatsome_string_limit_words($the_excerpt, $excerpt_length) . '[...]';
 					?>
 					</p>
 					<?php } ?>
-					<?php if($comments == 'true' && comments_open() && '0' != get_comments_number()){ ?>
-						<p class="from_the_blog_comments uppercase is-xsmall"><?php echo get_comments_number( get_the_ID() ); ?> comments</p>
-					<?php } ?>
+                    <?php if ( $comments == 'true' && comments_open() && '0' != get_comments_number() ) { ?>
+                        <p class="from_the_blog_comments uppercase is-xsmall">
+                            <?php
+                                $comments_number = get_comments_number( get_the_ID() );
+                                printf( _n( '%1$s Comment', '%1$s Comments', $comments_number, 'flatsome' ),
+                                    number_format_i18n( $comments_number ) )
+                            ?>
+                        </p>
+                    <?php } ?>
 
 					<?php if($readmore) { ?>
 						<button href="<?php echo get_the_permalink(); ?>" class="button <?php echo $readmore_color; ?> is-<?php echo $readmore_style; ?> is-<?php echo $readmore_size; ?> mb-0">
@@ -281,7 +297,7 @@ while ( $recentPosts->have_posts() ) : $recentPosts->the_post();
 						</div>
 					<?php } ?>
 				</div><!-- .box -->
-				</a><!-- .link -->
+				
 			</div><!-- .col-inner -->
 		</div><!-- .col -->
 <?php endwhile;

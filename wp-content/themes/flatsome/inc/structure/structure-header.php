@@ -7,7 +7,7 @@ function flatsome_header_nav($nav, $walker = false) {
 
           // Check if has Custom mobile menu
           if($nav == 'primary' && $walker == 'FlatsomeNavSidebar' && has_nav_menu( 'primary_mobile' )) $nav = 'primary_mobile';
-          
+
           // If single page
           $page_template = get_post_meta( get_the_ID($page), '_wp_page_template', true );
 
@@ -17,7 +17,7 @@ function flatsome_header_nav($nav, $walker = false) {
               <?php
           }
           else if ( has_nav_menu( $nav ) ) {
-          
+
           wp_nav_menu(array(
                 'theme_location' => $nav,
                 'container'       => false,
@@ -54,6 +54,8 @@ function flatsome_header_elements($options, $type = ''){
              flatsome_header_nav('top_bar_nav', $walker);
           } else if($value == 'nav'){
              flatsome_header_nav('primary', $walker);
+          } else if($value == 'wpml'){
+            get_template_part('template-parts/header/partials/element-languages', $type);
           } else{
             get_template_part('template-parts/header/partials/element-'.$value, $type);
           }
@@ -87,7 +89,7 @@ class FlatsomeNavDropdown extends Walker_Nav_Menu
 
     function start_lvl( &$output, $depth = 0, $args = array() ) {
         $display_depth = ($depth + 1);
-        
+
         if($display_depth == '1'){$class_names[] = 'nav-dropdown';}
 
         else {$class_names[] = 'nav-column';}
@@ -136,11 +138,6 @@ class FlatsomeNavDropdown extends Walker_Nav_Menu
       $classes[0] = 'has-icon-left';
     }
 
-    // Add font awesome Icons
-    if(strpos($classes[0],'fa-') !== false){
-      $menu_icon = get_flatsome_icon($classes[0]);
-      $classes[0] = 'has-icon-left';
-    }
 
     $class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
     $class_names = ' class="' . esc_attr( $class_names ) . '"';
@@ -170,20 +167,26 @@ class FlatsomeNavDropdown extends Walker_Nav_Menu
       $item_output .= '<img width="180" height="480" src="'.$item->description.'" title="'.apply_filters( 'the_title', $item->title, $item->ID ).'" alt="'.apply_filters( 'the_title', $item->title, $item->ID ).'"/>';
       $item_output .= '</a>';
     }
-    
+
     // Category Image
     else if(strpos($class_names,'category-column') !== false){
       $item_output = '<div class="category-images-preview">Loading</div>';
+
     } else {
-    // Normal Items
+
+      // Normal Items
       $item_output = $args->before;
       $item_output .= '<a'. $attributes .'>';
+
       // Add menu
       if($menu_icon) $item_output .= $menu_icon;
       $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+
       // Add down arrow
-      if($item->hasChildren && $depth == 0) $item_output .= get_flatsome_icon('icon-angle-down');
-      $item_output .= '</a>';
+      $icon = '';
+      if($item->hasChildren && $depth == 0) $icon = get_flatsome_icon('icon-angle-down');
+
+      $item_output .= $icon.'</a>';
       $item_output .= $args->after;
     }
 
@@ -329,8 +332,8 @@ add_filter('flatsome_header_class','flatsome_sticky_headers', 11);
 
 function flatsome_has_top_bar(){
   if(!get_theme_mod('topbar_show', 1)) return false;
-  if(get_theme_mod('topbar_elements_center') 
-  || get_theme_mod('topbar_elements_left') 
+  if(get_theme_mod('topbar_elements_center')
+  || get_theme_mod('topbar_elements_left')
   || get_theme_mod('topbar_elements_right')
   || get_theme_mod('header_mobile_elements_top')){
       return true;
@@ -338,8 +341,8 @@ function flatsome_has_top_bar(){
 }
 
 function flatsome_has_bottom_bar(){
-  if(get_theme_mod('header_elements_bottom_left') 
-  || get_theme_mod('header_elements_bottom_center') 
+  if(get_theme_mod('header_elements_bottom_left')
+  || get_theme_mod('header_elements_bottom_center')
   || get_theme_mod('header_elements_bottom_right')
   || get_theme_mod('header_mobile_elements_bottom')){
       return true;
@@ -392,7 +395,7 @@ function header_inner_class($position) {
           $classes[] = 'show-for-medium';
         }
     }
-    
+
     // Dark nav on light headers
     $page_template =  get_post_meta( get_the_ID(), '_wp_page_template', true );
     if(!empty($page_template) && strpos($page_template, 'light') !== false && $position == 'bottom' || strpos($page_template, 'light') !== false && $position == 'main' && get_theme_mod('header_color', 'light') !== 'dark') {
@@ -416,7 +419,7 @@ function flatsome_nav_classes($position) {
         $classes[] = 'nav-uppercase';
       }
   }
-  
+
   if($position == 'bottom'){
       if(get_theme_mod('nav_style_bottom')) $classes[] = 'nav-'.get_theme_mod('nav_style_bottom');
       if(get_theme_mod('nav_size_bottom')) $classes[] = 'nav-size-'.get_theme_mod('nav_size_bottom');
@@ -462,6 +465,7 @@ function flatsome_body_classes( $classes ) {
     if(get_theme_mod('body_bg_type') == 'bg-full-size') $classes[] = 'bg-fill';
     if(get_theme_mod('box_shadow')) $classes[] = 'box-shadow';
     if(get_theme_mod('flatsome_lightbox', 1)) $classes[] = 'lightbox';
+    if(get_theme_mod('lazy_load_icons', 0) ) $classes[] = 'lazy-icons';
     if(get_theme_mod('dropdown_arrow', 1)) $classes[] = 'nav-dropdown-has-arrow';
 
 	return $classes;
@@ -470,33 +474,31 @@ add_filter( 'body_class', 'flatsome_body_classes' );
 
 
 function flatsome_dropdown_classes(){
+  $class_names = array();
 
-        $class_names = array();
+  // Add Dropdown Styles
+  $class_names[] = 'nav-dropdown-'.get_theme_mod('dropdown_style','default');
+  if(get_theme_mod('dropdown_text') == 'dark'){ $class_names[] = 'dark'; }
+  if(get_theme_mod('dropdown_text_style') == 'uppercase'){$class_names[] = 'dropdown-uppercase';}
 
-        // Add Dropdown Styles
-        $class_names[] = 'nav-dropdown-'.get_theme_mod('dropdown_style','default');
-        if(get_theme_mod('dropdown_text') == 'dark'){ $class_names[] = 'dark'; }
-        if(get_theme_mod('dropdown_text_style') == 'uppercase'){$class_names[] = 'dropdown-uppercase';}
-
-       echo implode(" ", $class_names);
+  echo implode(" ", $class_names);
 }
 
 // Add Header Backgrounds
 function flatsome_add_header_backgrounds(){
-    global $page;
-    $page_template =  get_post_meta( get_the_ID($page), '_wp_page_template', true );
+  global $page;
+  $page_template =  get_post_meta( get_the_ID($page), '_wp_page_template', true );
 
-    // Add BG image
-    echo '<div class="header-bg-image fill"></div>';
-    
-    // Add BG Color
-    echo '<div class="header-bg-color fill"></div>';
+  // Add BG image
+  echo '<div class="header-bg-image fill"></div>';
 
-    // Add BG shade to transparent headers
-    if(!empty($page_template) && strpos($page_template, 'transparent') && get_theme_mod('header_bg_transparent_shade')) {
-        echo '<div class="shade shade-top hide-for-sticky fill"></div>';
-    }
-   
+  // Add BG Color
+  echo '<div class="header-bg-color fill"></div>';
+
+  // Add BG shade to transparent headers
+  if(!empty($page_template) && strpos($page_template, 'transparent') && get_theme_mod('header_bg_transparent_shade')) {
+      echo '<div class="shade shade-top hide-for-sticky fill"></div>';
+  }
 }
 add_action('flatsome_header_background','flatsome_add_header_backgrounds',10);
 
@@ -517,13 +519,13 @@ function flatsome_custom_header_js() {
 add_action( 'wp_head', 'flatsome_custom_header_js');
 
 function flatsome_logo_position(){
-    $classes = array();
-    $classes[] = 'logo-'.get_theme_mod('logo_position','left');
-    
-    // Mobile logo position.
-    if(get_theme_mod('logo_position_mobile','center') == 'center') $classes[] = 'medium-logo-center';
+  $classes = array();
+  $classes[] = 'logo-'.get_theme_mod('logo_position','left');
 
-    echo implode(" ", $classes);
+  // Mobile logo position.
+  if(get_theme_mod('logo_position_mobile','center') == 'center') $classes[] = 'medium-logo-center';
+
+  echo implode(" ", $classes);
 }
 
 function flatsome_html_after_header(){

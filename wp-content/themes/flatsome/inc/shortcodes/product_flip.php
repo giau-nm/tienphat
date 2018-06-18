@@ -9,7 +9,7 @@ function ux_product_flip($atts, $content = null, $tag) {
     'title' => '',
     'ids' => '',
     'width' => '',
-    
+
     'slider_nav_style' => 'normal',
     'slider_nav_position' => 'outside',
     'slider_bullets' => 'true',
@@ -74,7 +74,7 @@ function ux_product_flip($atts, $content = null, $tag) {
           <div class="row"><div class="large-12 col">
           <div style="background-color:#FFF;" class="slider flipContainer slider-nav-circle <?php echo implode(' ', $slider_classes);?>"
             data-flickity-options='{
-              "cellAlign": "center", 
+              "cellAlign": "center",
               "wrapAround": true,
               "percentPosition": true,
               "imagesLoaded": true,

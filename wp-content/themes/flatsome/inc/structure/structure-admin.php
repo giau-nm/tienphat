@@ -1,24 +1,27 @@
 <?php
 
 /* Add Custom WP Editor CSS */
+
+if(!function_exists('flatsome_editor_style')) {
+  function flatsome_editor_style($url) {
+    if ( !empty($url) )
+      $url .= ',';
+    // Change the path here if using sub-directory
+    $url .= trailingslashit( get_template_directory_uri() ) . 'assets/css/editor.css';
+    return $url;
+  }
+}
 add_filter('mce_css', 'flatsome_editor_style');
 
-function flatsome_editor_style($url) {
-  if ( !empty($url) )
-    $url .= ',';
-  // Change the path here if using sub-directory
-  $url .= trailingslashit( get_template_directory_uri() ) . 'assets/css/editor.css';
-  return $url;
-}
 
 /* Extra Editor Styles (add extra styles to the content editor box) */
-add_filter( 'mce_buttons_2', 'flatsome_mce_buttons_2' );
-function flatsome_mce_buttons_2( $buttons ) {
-    array_unshift( $buttons, 'styleselect' );
-    return $buttons;
+if(!function_exists('flatsome_mce_buttons_2')) {
+  function flatsome_mce_buttons_2( $buttons ) {
+      array_unshift( $buttons, 'styleselect' );
+      return $buttons;
+  }
 }
-
-
+add_filter( 'mce_buttons', 'flatsome_mce_buttons_2' );
 
 
 // Customize mce editor font sizes
@@ -29,8 +32,6 @@ if ( ! function_exists( 'flatsome_editor_text_sizes' ) ) {
   }
 }
 add_filter( 'tiny_mce_before_init', 'flatsome_editor_text_sizes' );
-
-
 
 
 // Enable font size & font family selects in the editor
@@ -44,18 +45,8 @@ if ( ! function_exists( 'flatsome_font_buttons' ) ) {
 }
 add_filter( 'mce_buttons_2', 'flatsome_font_buttons');
 
-// Add custom Fonts to the Fonts list
-if ( ! function_exists( 'flatsome_mce_fonts_array' ) ) {
-  function flatsome_mce_fonts_array( $initArray ) {
-    $initArray['font_formats'] = 'Roboto (Primary Font)= Roboto, Arial=arial, sans-serif;';
-          return $initArray;
-  }
-}
-//add_filter( 'tiny_mce_before_init', 'flatsome_mce_fonts_array' );
 
-
-add_filter( 'tiny_mce_before_init', 'ux_formats_before_init' );
-function ux_formats_before_init( $settings ) {
+function flatsome_formats_before_init( $settings ) {
 
     $style_formats = array(
 
@@ -483,47 +474,50 @@ function ux_formats_before_init( $settings ) {
         ),
     );
 
+    $style_formats = apply_filters( 'flatsome_text_formats', $style_formats );
     $settings['style_formats'] = json_encode( $style_formats );
 
     return $settings;
 
 }
+add_filter( 'tiny_mce_before_init', 'flatsome_formats_before_init' );
 
 
 /* Extra Editor Colors */
-function flatsome_text_colors( $init ) {
-  global $flatsome_opt;
-  $default_colours = '
-      "000000", "Black",        "993300", "Burnt orange", "333300", "Dark olive",   "003300", "Dark green",   "003366", "Dark azure",   "000080", "Navy Blue",      "333399", "Indigo",       "333333", "Very dark gray",
-      "800000", "Maroon",       "FF6600", "Orange",       "808000", "Olive",        "008000", "Green",        "008080", "Teal",         "0000FF", "Blue",           "666699", "Grayish blue", "808080", "Gray",
-      "FF0000", "Red",          "FF9900", "Amber",        "99CC00", "Yellow green", "339966", "Sea green",    "33CCCC", "Turquoise",    "3366FF", "Royal blue",     "800080", "Purple",       "999999", "Medium gray",
-      "FF00FF", "Magenta",      "FFCC00", "Gold",         "FFFF00", "Yellow",       "00FF00", "Lime",         "00FFFF", "Aqua",         "00CCFF", "Sky blue",       "993366", "Brown",        "C0C0C0", "Silver",
-      "FF99CC", "Pink",         "FFCC99", "Peach",        "FFFF99", "Light yellow", "CCFFCC", "Pale green",   "CCFFFF", "Pale cyan",    "99CCFF", "Light sky blue", "CC99FF", "Plum",         "FFFFFF", "White"
-  ';
-  $custom_colours = '
-      "e14d43", "Primary Color", "d83131", "Color 2 Name", "ed1c24", "Color 3 Name", "f99b1c", "Color 4 Name", "50b848", "Color 5 Name", "00a859", "Color 6 Name",   "00aae7", "Color 7 Name", "282828", "Color 8 Name"
-  ';
-  $init['textcolor_map'] = '['.$custom_colours.','.$default_colours.']';
-  return $init;
+if ( ! function_exists( 'flatsome_text_colors' ) ) {
+  function flatsome_text_colors( $init ) {
+    global $flatsome_opt;
+    $default_colours = '
+        "000000", "Black",        "993300", "Burnt orange", "333300", "Dark olive",   "003300", "Dark green",   "003366", "Dark azure",   "000080", "Navy Blue",      "333399", "Indigo",       "333333", "Very dark gray",
+        "800000", "Maroon",       "FF6600", "Orange",       "808000", "Olive",        "008000", "Green",        "008080", "Teal",         "0000FF", "Blue",           "666699", "Grayish blue", "808080", "Gray",
+        "FF0000", "Red",          "FF9900", "Amber",        "99CC00", "Yellow green", "339966", "Sea green",    "33CCCC", "Turquoise",    "3366FF", "Royal blue",     "800080", "Purple",       "999999", "Medium gray",
+        "FF00FF", "Magenta",      "FFCC00", "Gold",         "FFFF00", "Yellow",       "00FF00", "Lime",         "00FFFF", "Aqua",         "00CCFF", "Sky blue",       "993366", "Brown",        "C0C0C0", "Silver",
+        "FF99CC", "Pink",         "FFCC99", "Peach",        "FFFF99", "Light yellow", "CCFFCC", "Pale green",   "CCFFFF", "Pale cyan",    "99CCFF", "Light sky blue", "CC99FF", "Plum",         "FFFFFF", "White"
+    ';
+    $custom_colours = '
+        "e14d43", "Primary Color", "d83131", "Color 2 Name", "ed1c24", "Color 3 Name", "f99b1c", "Color 4 Name", "50b848", "Color 5 Name", "00a859", "Color 6 Name",   "00aae7", "Color 7 Name", "282828", "Color 8 Name"
+    ';
+    $init['textcolor_map'] = '['.$custom_colours.','.$default_colours.']';
+    return $init;
   }
+}
 add_filter('tiny_mce_before_init', 'flatsome_text_colors');
 
 
-
 /* Enable SVG upload */
-function ux_enable_svg( $mimes ){
+function flatsome_enable_svg( $mimes ){
   // enable svg for super users.
   if(current_user_can('manage_options')){
       $mimes['svg'] = 'image/svg+xml';
   }
   return $mimes;
 }
-add_filter( 'upload_mimes', 'ux_enable_svg' );
+add_filter( 'upload_mimes', 'flatsome_enable_svg' );
 
 
-function ux_enable_font_upload( $mimes ){
+function flatsome_enable_font_upload( $mimes ){
   $mimes['ttf'] = 'application/octet-stream';
   $mimes['otf'] = 'font/opentype';
   return $mimes;
 }
-add_filter( 'upload_mimes', 'ux_enable_font_upload' );
+add_filter( 'upload_mimes', 'flatsome_enable_font_upload' );

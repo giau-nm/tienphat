@@ -1,2 +1,0 @@
-THÊM ELEMENT CHO HEADER OPTIONS:
-    - File inc/admin/options/helpers/options-helpers.php

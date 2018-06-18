@@ -31,12 +31,14 @@ function shortcode_ux_slider($atts, $content=null) {
         'friction' => '0.6',
         'selectedattraction' => '0.1',
         'threshold' => '5',
-        
+
         // Derpicated
         'mobile' => 'true',
 
     ), $atts ) );
 
+    // Stop if visibility is hidden
+    if($visibility == 'hidden') return;
 
     ob_start();
 

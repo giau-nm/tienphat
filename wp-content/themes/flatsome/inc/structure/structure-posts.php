@@ -1,10 +1,10 @@
 <?php
 
 // Remove recent comments style
-function flatsome_remove_recent_comments_style() {  
-        global $wp_widget_factory;  
-        remove_action( 'wp_head', array( $wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style' ) );  
-    }  
+function flatsome_remove_recent_comments_style() {
+        global $wp_widget_factory;
+        remove_action( 'wp_head', array( $wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style' ) );
+    }
 add_action( 'widgets_init', 'flatsome_remove_recent_comments_style' );
 
 
@@ -20,7 +20,7 @@ function flatsome_blog_article_classes(){
 
 // Add Custom Blog Header
 function flatsome_custom_blog_header(){
-	if(flatsome_option('blog_header') && is_home()){ 
+	if(flatsome_option('blog_header') && is_home()){
 		echo '<div class="blog-header-wrapper">'.do_shortcode(flatsome_option('blog_header')).'</div>';
 	}
 }
@@ -43,9 +43,8 @@ add_filter('flatsome_header_class','flatsome_blog_header_classes', 10);
 
 // Add Big blog header
 function flatsome_single_page_header(){
-    $style = flatsome_option('blog_post_style');
-	if(is_singular('post') && $style == 'top'){
-		echo get_template_part( 'template-parts/posts/partials/single-featured', $style );
+  if(is_singular('post') && get_theme_mod('blog_post_style') == 'top'){
+		echo get_template_part( 'template-parts/posts/partials/single-featured', get_theme_mod('blog_post_style'));
 	}
 }
 add_action('flatsome_after_header','flatsome_single_page_header', 10);
@@ -76,13 +75,14 @@ function flatsome_before_blog_comments(){
 add_action('flatsome_before_comments','flatsome_before_blog_comments');
 
 // Add button class to read more link
-function flatsome_add_morelink_class( $link, $text )
-{
-    return str_replace(
-         'more-link'
-        ,'more-link button primary smaller is-outline'
-        ,$link
-    );
+if( ! function_exists('flatsome_add_morelink_class') ) {
+  function flatsome_add_morelink_class( $link, $text ) {
+      return str_replace(
+           'more-link'
+          ,'more-link button primary smaller is-outline'
+          ,$link
+      );
+  }
 }
 add_action( 'the_content_more_link', 'flatsome_add_morelink_class', 10, 2 );
 
@@ -187,7 +187,7 @@ function flatsome_comment( $comment, $args, $depth ) {
                     <?php printf( _x( '%1$s at %2$s', '1: date, 2: time', 'flatsome' ), get_comment_date(), get_comment_time() ); ?>
                     </time></a>
                     <?php edit_comment_link( __( 'Edit', 'flatsome' ), '<span class="edit-link ml-half strong">', '<span>' ); ?>
-                                
+
                         <div class="reply pull-right">
                             <?php
                                 comment_reply_link( array_merge( $args,array(
@@ -241,9 +241,7 @@ function flatsome_posted_on() {
 endif;
 
 
-
-
-function flatsome_featured_sticky_posts( $query ) {  
+function flatsome_featured_sticky_posts( $query ) {
     if (flatsome_option('blog_featured') && $query->is_home() && $query->is_main_query()) {
         $query->set( 'ignore_sticky_posts', 1);
         if(flatsome_option('blog_hide_sticky')){ $query->set( 'post__not_in', get_option( 'sticky_posts' ) );}
@@ -270,12 +268,12 @@ add_filter( 'attachment_link', 'flatsome_enhanced_image_navigation', 10, 2 );
 
 // Numbered Pagination
 if ( !function_exists( 'flatsome_posts_pagination' ) ) {
-    
+
     function  flatsome_posts_pagination() {
 
         $prev_arrow = is_rtl() ? get_flatsome_icon('icon-angle-right') : get_flatsome_icon('icon-angle-left');
         $next_arrow = is_rtl() ? get_flatsome_icon('icon-angle-left') : get_flatsome_icon('icon-angle-right');
-        
+
         global $wp_query;
         $total = $wp_query->max_num_pages;
         $big = 999999999; // need an unlikely integer

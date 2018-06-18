@@ -57,13 +57,13 @@ function flatsome_page_footer(){
 	if(is_page() && !$block) {
 		// Custom Page footers
 		$page_footer =  get_post_meta( get_the_ID(), '_footer', true );
-		
-		if(empty($page_footer) && $page_footer == 'simple'){
+
+		if(empty($page_footer) || $page_footer == 'normal'){
 			echo get_template_part('template-parts/footer/footer');
-		} else if(!empty($page_footer) || $page_footer != 'disabled'){
+		} else if(!empty($page_footer) && $page_footer !== 'disabled'){
 			echo get_template_part('template-parts/footer/footer', $page_footer);
 		}
-		
+
 	} else {
 		// Global footer
 		if($block){
@@ -81,10 +81,9 @@ add_filter('flatsome_footer','flatsome_page_footer', 10);
 // Add Top Link
 function flatsome_go_to_top(){
 	if(!get_theme_mod('back_to_top', 1)) return;
-	echo '<a href="#top" class="back-to-top button invert plain is-outline hide-for-medium icon circle fixed bottom z-1" id="top-link">'.get_flatsome_icon('icon-angle-up').'</a>';
+	echo get_template_part('template-parts/footer/back-to-top');
 }
 add_action( 'flatsome_footer', 'flatsome_go_to_top');
-
 
 
 /* Custom footer scripts */
@@ -98,8 +97,8 @@ add_action('wp_footer', 'flatsome_footer_scripts');
 function flatsome_html_before_footer(){
   $html_before = get_theme_mod('html_before_footer');
   if($html_before){
-     echo do_shortcode($html_before);
-   }
+    echo do_shortcode($html_before);
+  }
 }
 add_action('flatsome_before_footer', 'flatsome_html_before_footer');
 
@@ -107,7 +106,7 @@ add_action('flatsome_before_footer', 'flatsome_html_before_footer');
 function flatsome_html_after_footer(){
 	$html_after = get_theme_mod('html_after_footer');
 	if($html_after){
-	        echo do_shortcode($html_after);
+	 echo do_shortcode($html_after);
 	}
 }
 add_action('flatsome_after_footer', 'flatsome_html_after_footer');

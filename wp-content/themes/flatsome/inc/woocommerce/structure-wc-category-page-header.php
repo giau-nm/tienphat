@@ -21,9 +21,15 @@ function flatsome_category_header(){
         echo wc_get_template_part('layouts/headers/category-title');
     }
     // Set Category headers
-    else if(is_product_category() || is_shop()){
+    else if(is_product_category() || is_shop() || is_product_tag() || is_tax()){
         // Get Custom Header Content
-        $cat_header_style = flatsome_option('category_title_style');
+        $cat_header_style = get_theme_mod('category_title_style');
+
+        // Fix Transparent header
+        if(get_theme_mod('category_header_transparent', 0) && !$cat_header_style){
+          $cat_header_style = 'featured';
+        }
+
         $queried_object = get_queried_object();
         if(!is_shop() && get_term_meta($queried_object->term_id, 'cat_meta')){
             $content = get_term_meta($queried_object->term_id, 'cat_meta');
@@ -35,7 +41,7 @@ function flatsome_category_header(){
                     echo wc_get_template_part('layouts/headers/category-title',$cat_header_style);
                     echo '<div class="custom-category-header">'.do_shortcode($content[0]['cat_header']).'</div>';
                 }
-           
+
             } else{
               // Get default header title
               return wc_get_template_part('layouts/headers/category-title',$cat_header_style);
@@ -53,9 +59,8 @@ add_action('flatsome_after_header','flatsome_category_header');
 // Add Transparent Header To Cateogry if Set
 function flatsome_category_header_classes($classes){
 
-    // Add transparent header to product page if set.
     $transparent = flatsome_option('category_header_transparent');
-    if($transparent && is_shop() || $transparent && is_product_category()){
+    if($transparent && is_shop() || $transparent && is_product_category() || $transparent && is_product_tag()){
          $classes[] = 'transparent has-transparent nav-dark toggle-nav-dark';
     }
 
@@ -67,41 +72,23 @@ add_filter('flatsome_header_class','flatsome_category_header_classes', 10);
 
 
 // Add Category Filter button for Mobile and Off Canvas.
-function flatsome_add_category_filter_button(){
-    $layout = get_theme_mod('category_sidebar', 'left-sidebar');
-    
-    if($layout == 'none') return;
-
-    $class = 'show-for-medium';
-    if($layout == 'off-canvas') $class = '';
-    ?> 
-    <div class="category-filtering category-filter-row <?php echo $class; ?>">
-        <a href="#" data-open="#shop-sidebar"  data-pos="left" class="filter-button uppercase plain">
-            <i class="icon-menu"></i>
-            <strong> <?php echo __( 'Filter', 'woocommerce' ); ?></strong>
-        </a>
-        <div class="inline-block">
-            <?php the_widget('WC_Widget_Layered_Nav_Filters'); ?>
-        </div>
-    </div>
-    <?php 
+function flatsome_add_category_filter_button() {
+  echo wc_get_template_part('loop/filter-button');
 }
 add_action('flatsome_category_title', 'flatsome_add_category_filter_button',20);
 
-
-function flatsome_category_title(){
-    if(!flatsome_option('category_show_title')) return; ?>
-     <h1 class="shop-page-title is-xlarge"><?php woocommerce_page_title(); ?></h1>
-    <?php
+// Add Category Title if set
+if(!function_exists('flatsome_category_title')) {
+  function flatsome_category_title(){
+      if(!flatsome_option('category_show_title')) return; ?>
+       <h1 class="shop-page-title is-xlarge"><?php woocommerce_page_title(); ?></h1>
+      <?php
+  }
 }
 add_action('flatsome_category_title','flatsome_category_title',1);
 
-
-/* Remove WooCommerce Breadcrumb hook */
-function flatsome_shop_loop_tools_breadcrumbs(){ ?>
-    <div class="is-<?php echo flatsome_option('breadcrumb_size'); ?>">
-        <?php woocommerce_breadcrumb(); ?>
-    </div>
-    <?php
+// Add Breadcrumbs
+function flatsome_shop_loop_tools_breadcrumbs(){
+  echo wc_get_template_part('loop/breadcrumbs');
 }
 add_action('flatsome_category_title','flatsome_shop_loop_tools_breadcrumbs',10);

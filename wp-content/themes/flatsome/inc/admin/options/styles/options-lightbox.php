@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 
 Flatsome_Option::add_section( 'lightbox', array(
@@ -9,7 +9,7 @@ Flatsome_Option::add_section( 'lightbox', array(
 Flatsome_Option::add_field( 'option',  array(
 	'type'        => 'checkbox',
 	'settings'     => 'flatsome_lightbox',
-	'label'       => __( 'Enable BIZHOSTVN Lightbox', 'flatsome-admin' ),
+	'label'       => __( 'Enable Flatsome Lightbox', 'flatsome-admin' ),
     'section'     => 'lightbox',
 	'transport' => 'postMessage',
 	'default'     => 1,

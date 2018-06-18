@@ -13,7 +13,7 @@ Flatsome_Option::add_section( 'header-layout', array(
 Flatsome_Option::add_field( 'option',  array(
 	'type'        => 'text',
 	'settings'     => 'flatsome_version',
-	'label'       => __( 'BIZHOSTVN Version', 'flatsome-admin' ),
+	'label'       => __( 'Flatsome Version', 'flatsome-admin' ),
 	'section'     => 'header-layout',
 	'default'     => '',
 ));

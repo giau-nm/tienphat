@@ -18,7 +18,7 @@ $flatsome_icon = '<svg style="width:20px; margin-top:-4px; height:20px;vertical-
 
 $wp_admin_bar->add_menu( array(
  'id' => 'flatsome_panel',
- 'title' => $flatsome_icon.' BIZHOSTVN',
+ 'title' => $flatsome_icon.' Flatsome',
  'href' => $panel_url
 ));
 
@@ -35,21 +35,21 @@ $wp_admin_bar->add_menu( array(
  'title' => '<span class="dashicons dashicons-admin-tools" style="'.$icon_style.'"></span> Advanced',
  'href' =>  $advanced_url.''
 ));
-//==========================================
-// $wp_admin_bar->add_menu( array(
-//  'parent' => 'flatsome_panel',
-//  'id' => 'flatsome_panel_license',
-//  'title' => 'Theme License',
-//  'href' => $panel_url
-// ));
 
-// $wp_admin_bar->add_menu( array(
-//  'parent' => 'flatsome_panel',
-//  'id' => 'flatsome_panel_support',
-//  'title' => 'Help & Guides',
-//  'href' => $panel_url.'-support'
-// ));
-//==========================================
+$wp_admin_bar->add_menu( array(
+ 'parent' => 'flatsome_panel',
+ 'id' => 'flatsome_panel_license',
+ 'title' => 'Theme License',
+ 'href' => $panel_url
+));
+
+$wp_admin_bar->add_menu( array(
+ 'parent' => 'flatsome_panel',
+ 'id' => 'flatsome_panel_support',
+ 'title' => 'Help & Guides',
+ 'href' => $panel_url.'-support'
+));
+
 /*
 $wp_admin_bar->add_menu( array(
  'parent' => 'flatsome_panel',
@@ -58,29 +58,28 @@ $wp_admin_bar->add_menu( array(
  'href' => $panel_url.'-plugins'
 )); */
 
-//==========================================>
-// $wp_admin_bar->add_menu( array(
-//  'parent' => 'flatsome_panel',
-//  'id' => 'flatsome_panel_changelog',
-//  'title' => 'Change log',
-//  'href' => $panel_url.'-changelog'
-// ));
+$wp_admin_bar->add_menu( array(
+ 'parent' => 'flatsome_panel',
+ 'id' => 'flatsome_panel_changelog',
+ 'title' => 'Change log',
+ 'href' => $panel_url.'-changelog'
+));
 
-// $wp_admin_bar->add_menu( array(
-//  'parent' => 'flatsome_panel',
-//  'id' => 'flatsome_panel_setup_wizard',
-//  'title' => 'Setup Wizard',
-//  'href' => admin_url().'admin.php?page=flatsome-setup'
-// ));
+$wp_admin_bar->add_menu( array(
+ 'parent' => 'flatsome_panel',
+ 'id' => 'flatsome_panel_setup_wizard',
+ 'title' => 'Setup Wizard',
+ 'href' => admin_url().'admin.php?page=flatsome-setup'
+));
 
-// if(!flatsome_is_theme_enabled()){
-//   $wp_admin_bar->add_menu( array(
-//    'id' => 'flatsome-activate',
-//    'title' => '<span class="dashicons dashicons-unlock" style="'.$icon_style.'"></span>Activate Theme',
-//    'href' => admin_url() . 'admin.php?page=flatsome-panel',
-//   ));
-// }
-//<==========================================
+if(!flatsome_is_theme_enabled()){
+  $wp_admin_bar->add_menu( array(
+   'id' => 'flatsome-activate',
+   'title' => '<span class="dashicons dashicons-unlock" style="'.$icon_style.'"></span>Activate Theme',
+   'href' => admin_url() . 'admin.php?page=flatsome-panel',
+  ));
+}
+
 $wp_admin_bar->add_menu( array(
  'parent' => 'theme_options',
  'id' => 'options_header',
@@ -216,7 +215,7 @@ $wp_admin_bar->add_menu( array(
 $wp_admin_bar->add_menu( array(
  'parent' => 'options_shop',
  'id' => 'options_shop_category_page',
- 'title' => 'Category Page',
+ 'title' => 'Shop / Category Page',
  'href' =>  $optionUrl_section.'category-page'
 ));
 

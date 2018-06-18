@@ -62,7 +62,12 @@ function flatsome_ux_banner( $atts, $content = null ){
     'target' => '',
     'link' => '',
   ), $atts ) );
+
+   // Stop if visibility is hidden
+   if($visibility == 'hidden') return;
+
    ob_start();
+
    $classes = array('has-hover');
 
    // Custom Class
@@ -75,6 +80,9 @@ function flatsome_ux_banner( $atts, $content = null ){
    if($hover) $classes[] = 'bg-'.$hover;
    if($hover_alt) $classes[] = 'bg-'.$hover_alt;
 
+   /* Has video */
+   if($video_mp4 || $video_webm || $video_ogg) { $classes[] = 'has-video'; }
+   
    /* Sticky */
    if($sticky) $classes[] = 'sticky-section';
 

@@ -118,13 +118,13 @@ add_ux_builder_shortcode( 'section', array(
             'heading' => 'Class',
             'default' => '',
         ),
+        'visibility'  => require( __DIR__ . '/commons/visibility.php' ),
+
         'background_options' => require( __DIR__ . '/commons/background.php' ),
         'layout_options' => array(
             'type' => 'group',
             'heading' => __( 'Layout' ),
             'options' => array(
-
-                'visibility'  => require( __DIR__ . '/commons/visibility.php' ),
 
                 'dark' => array(
                     'type' => 'radio-buttons',

@@ -27,8 +27,8 @@ get_header(); ?>
 						</div><!-- .page-content -->
 					</div>
 				</div><!-- .row -->
-
-
+				
+				
 			</section><!-- .error-404 -->
 
 		</main><!-- #main -->

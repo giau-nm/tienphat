@@ -38,11 +38,7 @@ add_action( 'woocommerce_single_product_summary', 'flatsome_woocommerce_product_
 
 // Add Breadcrumbs to Featured Headers if set
 function flatsome_product_page_breadcrumbs(){
-  ?>
-    <div class="is-<?php echo get_theme_mod('breadcrumb_size'); ?>">
-        <?php woocommerce_breadcrumb(); ?>
-    </div>
-  <?php
+  echo wc_get_template_part('loop/breadcrumbs');
 }
 add_action('flatsome_product_title','flatsome_product_page_breadcrumbs',20);
 
@@ -50,96 +46,97 @@ add_action('flatsome_product_title','flatsome_product_page_breadcrumbs',20);
 // Move Page title up if featured header is set
 function flatsome_product_page_title(){
   if(get_theme_mod('product_header') !== 'featured-center') return;
-  ?>
-  <h1 itemprop="name" class="product-title entry-title">
-    <?php the_title(); ?>
-  </h1>
-  <?php
+
+  echo '<h1 class="product-title entry-title">'.get_the_title().'</h1>';
+
   remove_action('woocommerce_single_product_summary','woocommerce_template_single_title', 5);
 }
 add_action('flatsome_product_title','flatsome_product_page_title', 10);
 
 
 /* Add Next/Prev Nav to Product Image  */
-function flatsome_product_title_next_prev(){
-  if(get_theme_mod('product_next_prev_nav',1)){
-   echo flatsome_product_next_prev_nav();
+if(!function_exists('flatsome_product_title_next_prev')) {
+  function flatsome_product_title_next_prev(){
+    if(get_theme_mod('product_next_prev_nav',1)){
+     echo flatsome_product_next_prev_nav();
+    }
   }
 }
 add_action('flatsome_product_title_tools','flatsome_product_title_next_prev', 20);
 
-
-function flatsome_product_mobile_next_prev_nav(){
-   if(!get_theme_mod('product_header') && get_theme_mod('product_next_prev_nav',1)){
-        flatsome_product_next_prev_nav('show-for-medium');
-   }
+if(!function_exists('flatsome_product_mobile_next_prev_nav')) {
+  function flatsome_product_mobile_next_prev_nav(){
+     if(!get_theme_mod('product_header') && get_theme_mod('product_next_prev_nav',1)){
+          flatsome_product_next_prev_nav('show-for-medium');
+     }
+  }
 }
 add_action('woocommerce_single_product_summary','flatsome_product_mobile_next_prev_nav', 7);
 
 
 /* Add Next/Prev Nav to Product Sidebar  */
-function flatsome_product_nav_sidebar(){
-   if(get_theme_mod('product_next_prev_nav',1) && !get_theme_mod('product_header') && get_theme_mod('product_layout') !== 'left-sidebar-full' && get_theme_mod('product_layout') !== 'left-sidebar'){
-    echo '<div class="hide-for-off-canvas" style="width:100%">';
-      flatsome_product_next_prev_nav('nav-right text-right');
-    echo '</div>';
-   }
+if(!function_exists('flatsome_product_nav_sidebar')) {
+  function flatsome_product_nav_sidebar(){
+     if(get_theme_mod('product_next_prev_nav',1) && !get_theme_mod('product_header') && get_theme_mod('product_layout') !== 'left-sidebar-full' && get_theme_mod('product_layout') !== 'left-sidebar'){
+      echo '<div class="hide-for-off-canvas" style="width:100%">';
+        flatsome_product_next_prev_nav('nav-right text-right');
+      echo '</div>';
+     }
+  }
 }
 add_action('flatsome_before_product_sidebar','flatsome_product_nav_sidebar', 0);
 
 
-
-function flatsome_product_next_prev_nav($class = ''){
-      echo '<ul class="next-prev-thumbs is-small '.$class.'">';
-      flatsome_next_post_link_product();
-      flatsome_previous_post_link_product();
-      echo '</ul>';
+if(!function_exists('flatsome_product_next_prev_nav')) {
+  function flatsome_product_next_prev_nav($class = ''){
+        echo '<ul class="next-prev-thumbs is-small '.$class.'">';
+        flatsome_next_post_link_product();
+        flatsome_previous_post_link_product();
+        echo '</ul>';
+  }
 }
 
 
-function flatsome_next_post_link_product() {
-    global $post;
-    $next_post = get_next_post(true,'','product_cat');
-    if ( is_a( $next_post , 'WP_Post' ) ) { ?>
-       <li class="prod-dropdown has-dropdown">
-             <a href="<?php echo get_the_permalink( $next_post->ID ); ?>"  rel="next" class="button icon is-outline circle">
-                <?php echo get_flatsome_icon('icon-angle-left'); ?>
-            </a>
-            <div class="nav-dropdown">
-              <a title="<?php echo get_the_title( $next_post->ID ); ?>" href="<?php echo get_the_permalink( $next_post->ID ); ?>">
-              <?php echo get_the_post_thumbnail($next_post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' )) ?></a>
-            </div>
-        </li>
-    <?php }
+if(!function_exists('flatsome_next_post_link_product')) {
+  function flatsome_next_post_link_product() {
+      global $post;
+      $next_post = get_next_post(true,'','product_cat');
+      if ( is_a( $next_post , 'WP_Post' ) ) { ?>
+         <li class="prod-dropdown has-dropdown">
+               <a href="<?php echo get_the_permalink( $next_post->ID ); ?>"  rel="next" class="button icon is-outline circle">
+                  <?php echo get_flatsome_icon('icon-angle-left'); ?>
+              </a>
+              <div class="nav-dropdown">
+                <a title="<?php echo get_the_title( $next_post->ID ); ?>" href="<?php echo get_the_permalink( $next_post->ID ); ?>">
+                <?php echo get_the_post_thumbnail($next_post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' )) ?></a>
+              </div>
+          </li>
+      <?php }
+  }
 }
 
-function flatsome_previous_post_link_product() {
-    global $post;
-    $prev_post = get_previous_post(true,'','product_cat');
-    if ( is_a( $prev_post , 'WP_Post' ) ) { ?>
-       <li class="prod-dropdown has-dropdown">
-             <a href="<?php echo get_the_permalink( $prev_post->ID ); ?>" rel="next" class="button icon is-outline circle">
-                <?php echo get_flatsome_icon('icon-angle-right'); ?>
-            </a>
-            <div class="nav-dropdown">
-                <a title="<?php echo get_the_title( $prev_post->ID ); ?>" href="<?php echo get_the_permalink( $prev_post->ID ); ?>">
-                <?php echo get_the_post_thumbnail($prev_post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' )) ?></a>
-            </div>
-        </li>
-    <?php }
+if(!function_exists('flatsome_previous_post_link_product')) {
+  function flatsome_previous_post_link_product() {
+      global $post;
+      $prev_post = get_previous_post(true,'','product_cat');
+      if ( is_a( $prev_post , 'WP_Post' ) ) { ?>
+         <li class="prod-dropdown has-dropdown">
+               <a href="<?php echo get_the_permalink( $prev_post->ID ); ?>" rel="next" class="button icon is-outline circle">
+                  <?php echo get_flatsome_icon('icon-angle-right'); ?>
+              </a>
+              <div class="nav-dropdown">
+                  <a title="<?php echo get_the_title( $prev_post->ID ); ?>" href="<?php echo get_the_permalink( $prev_post->ID ); ?>">
+                  <?php echo get_the_post_thumbnail($prev_post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' )) ?></a>
+              </div>
+          </li>
+      <?php }
+  }
 }
 
-function flatsome_open_product_sidebar_lightbox() {
-    if(!get_theme_mod('product_offcanvas_sidebar', 0)) return; ?>
-    <div class="category-filtering container text-center product-filter-row show-for-medium">
-        <a href="#product-sidebar"
-          data-open="#product-sidebar" 
-          data-pos="left"
-          data-visible-after="true"
-          class="filter-button uppercase plain">
-            <i class="icon-menu"></i>
-            <strong><?php echo __( 'Filter', 'woocommerce' ); ?></strong>
-        </a>
-    </div>
-<?php }
+if(!function_exists('flatsome_open_product_sidebar_lightbox')) {
+  function flatsome_open_product_sidebar_lightbox() {
+      if(!get_theme_mod('product_offcanvas_sidebar', 0)) return;
+      wc_get_template_part('single-product/filter-button');
+  }
+}
 add_action('woocommerce_before_single_product', 'flatsome_open_product_sidebar_lightbox', 15);

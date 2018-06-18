@@ -90,6 +90,7 @@ $options['post_options']['options']['tags'] = array(
 add_ux_builder_shortcode( 'ux_products', array(
     'name' => 'Products',
     'category' => __( 'Shop' ),
+    'priority' => 1,
     'thumbnail' =>  flatsome_ux_builder_thumbnail( 'products' ),
     'presets' => array(
             array(

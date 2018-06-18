@@ -13,14 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-get_header( 'shop' ); 
+get_header( 'shop' );
 
 // Add Custom Shop Content if set
 if(is_shop() && flatsome_option('html_shop_page_content') && $wp_query->query_vars['paged'] < 1){
    	echo do_shortcode('<div class="shop-page-content">'.flatsome_option('html_shop_page_content').'</div>');
 } else{
-	//wc_get_template_part( 'layouts/category', flatsome_option('category_sidebar'));
-	wc_get_template_part( 'layouts/category', 'off-canvas');
+	wc_get_template_part( 'layouts/category', flatsome_option('category_sidebar'));
 }
 
 get_footer( 'shop' );

@@ -1,11 +1,5 @@
 <?php
 
-/* Redirect to Homepage when customer log out */
-add_filter('logout_url', function ( $logouturl, $redir ) {
-  $redir = get_option('siteurl');
-  return $logouturl . '&amp;redirect_to=' . urlencode( $redir );
-}, 10, 2);
-
 /**
  * Load a template.
  *

@@ -90,9 +90,10 @@ $options = array_merge($options, $box_styles);
 add_ux_builder_shortcode( 'ux_product_categories', array(
     'name' => 'Product Categories',
     'category' => __( 'Shop' ),
+    'priority' => 3,
     #'wrap' => false,
     'thumbnail' =>  flatsome_ux_builder_thumbnail( 'categories' ),
-    
+
    'presets' => array(
         array(
             'name' => __( 'Default' ),

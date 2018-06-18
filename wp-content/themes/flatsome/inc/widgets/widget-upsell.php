@@ -16,7 +16,7 @@ class Upsell_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'upsell_widget', // Base ID
-			'VIFONIC Upsell Products', // Name
+			'Flatsome Upsell Products', // Name
 			array( 'description' => __( 'Add upsell products to product page', 'flatsome' ), ) // Args
 		);
 	}
@@ -35,7 +35,8 @@ class Upsell_Widget extends WP_Widget {
 		/* Disable if not on product page */
 		if(!function_exists('is_product') || !is_product()) return;
 
-		$upsells = $product->get_upsells();
+    $upsells = fl_woocommerce_version_check('3.0.0') ?  $product->get_upsell_ids() :  $product->get_upsells();
+
 		if ( sizeof( $upsells ) == 0 ) return;
 
 		extract( $args );
